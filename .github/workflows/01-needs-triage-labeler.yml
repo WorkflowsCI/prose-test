@@ -15,14 +15,14 @@ jobs:
         #if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
         #if: ! startsWith(github.event.issue.labels.*.name, 'component')
-        run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
+        run: echo "${{ applied_labels = fromJSON(github.event.issue.labels.*.name) }}" >> $GITHUB_ENV #prints out list of labels
         
         #run: echo "${{ join(github.event.issue.labels.*.name) }}" #not sure how join works
         ##failed: if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
       - name: whats it even doing
         #if: startsWith(github.event.issue.labels.*.name, 'component')
-        run: echo "${{ ! startsWith(github.event.issue.labels.*.name, 'domain') }}"
-        
+        #run: echo "${{ ! startsWith(github.event.issue.labels.*.name, 'domain') }}"
+        run: echo "${{ env.applied_labels }}"
         
         #- name: any domain 
         #run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain') }}"
