@@ -11,15 +11,18 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Has labels
+        id: applied-labels
         #if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
         #if: ! startsWith(github.event.issue.labels.*.name, 'component')
         #run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
         
-        run: echo "${{ join(github.event.issue.labels.*.name) }}
+        #run: echo "${{ join(github.event.issue.labels.*.name) }}" #not sure how join works
+        if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
+        run: echo "has component"
         
-      - name: any domain 
-        run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain') }}"
+      #- name: any domain 
+        #run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain') }}"
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
