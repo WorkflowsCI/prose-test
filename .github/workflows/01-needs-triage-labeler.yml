@@ -13,7 +13,7 @@ jobs:
       - name: Has label
         if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
-        run: echo "has label"
+        run: echo "${{ github.event.issue.labels.*.name }}"
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
