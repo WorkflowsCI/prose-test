@@ -8,9 +8,9 @@ on:
 
 jobs:
   needs-triage:
-    if:
-    !contains(github.event.issue.labels.*.name, 'Domain:Admin') ||
-    !contains(github.event.issue.labels.*.name, 'Domain:Discovery') ||
+    if: |
+    !contains(github.event.issue.labels.*.name, 'Domain:Admin') &&
+    !contains(github.event.issue.labels.*.name, 'Domain:Discovery') &&
     !contains(github.event.issue.labels.*.name, 'domain/quality-ops')
     runs-on: ubuntu-24.04
     steps:
