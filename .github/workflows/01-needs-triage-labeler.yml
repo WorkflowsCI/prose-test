@@ -19,7 +19,7 @@ jobs:
         
         #run: echo "${{ join(github.event.issue.labels.*.name) }}" #not sure how join works
         ##failed: if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
-        if: contains(fromJSON(github.event.issue.labels.*.name), 'bug'))
+        if: contains(fromJSON(github.event.issue.labels.*.name), 'bug')
         run: echo "has bug"
         
         #- name: any domain 
