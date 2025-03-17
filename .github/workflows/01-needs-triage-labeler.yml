@@ -8,10 +8,15 @@ on:
 
 jobs:
   needs-triage:
-    if: ! startsWith(github.event.issue.labels.*.name, 'Domain')
     runs-on: ubuntu-24.04
     steps:
+      - name: Check how many component labels
+        if:  startsWith(github.event.issue.labels.*.name, 'component') = 1
+        run: echo "1 component label"
+
+      - name: Add needs-triage label
       - uses: srvaroa/labeler@v1.13.0
+        if: ! startsWith(github.event.issue.labels.*.name, 'domain') #not case sensitive
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
