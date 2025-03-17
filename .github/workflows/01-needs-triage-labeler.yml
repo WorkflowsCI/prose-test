@@ -16,7 +16,7 @@ jobs:
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
-        if: ! startsWith(github.event.issue.labels.*.name, 'domain') #not case sensitive
+        if: ${{ ! startsWith(github.event.issue.labels.*.name, 'domain') }} #not case sensitive
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         with:
