@@ -14,7 +14,10 @@ jobs:
         #if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
         #if: ! startsWith(github.event.issue.labels.*.name, 'component')
-        run: echo "${{ toJSON(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component') }}" #prints out list of labels
+        run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
+        
+      - name: any domain 
+        run: echo "${{ startsWith(github.event.issue.labels.*.name, 'domain' }}"
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
