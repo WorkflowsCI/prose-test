@@ -18,10 +18,11 @@ jobs:
         #run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
         
         #run: echo "${{ join(github.event.issue.labels.*.name) }}" #not sure how join works
-        if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
-        run: echo "has component"
+        ##failed: if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
+        if: contains(fromJSON(github.event.issue.labels.*.name), 'bug'))
+        run: echo "has bug"
         
-      #- name: any domain 
+        #- name: any domain 
         #run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain') }}"
 
       - name: Add needs-triage label
