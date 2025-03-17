@@ -19,9 +19,9 @@ jobs:
         
         #run: echo "${{ join(github.event.issue.labels.*.name) }}" #not sure how join works
         ##failed: if: contains(fromJSON(github.event.issue.labels.*.name), startsWith(fromJSON(github.event.issue.labels.*.name), 'component'))
-      - name: any domain labels
+      - name: whats it even doing
         #if: startsWith(github.event.issue.labels.*.name, 'component')
-        run: echo "${{ contains(github.event.issue.labels.*.name, startsWith(github.event.issue.labels.*.name, 'domain')) }}"
+        run: echo "${{ ! startsWith(github.event.issue.labels.*.name, 'domain') }}"
         
         
         #- name: any domain 
