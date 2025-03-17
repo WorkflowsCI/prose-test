@@ -14,7 +14,9 @@ jobs:
         #if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
         #if: ! startsWith(github.event.issue.labels.*.name, 'component')
-        run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
+        #run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
+        
+        run: echo "${{ join(github.event.issue.labels.*.name) }}
         
       - name: any domain 
         run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain') }}"
