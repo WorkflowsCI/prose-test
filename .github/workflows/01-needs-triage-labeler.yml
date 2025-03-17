@@ -13,7 +13,7 @@ jobs:
       - name: Has labels
         #if:  github.event.issue.labels.*.name
         #if: ${{ contains(github.event.issue.labels.*.name) && startsWith(github.event.issue.labels.*.name, 'component')) }}
-        if: startsWith(github.event.issue.labels.*.name, 'component')
+        if: ! startsWith(github.event.issue.labels.*.name, 'component')
         run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
 
       - name: Add needs-triage label
