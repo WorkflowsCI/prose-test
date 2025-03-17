@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check how many component labels
         ##if:  ${{ startsWith(github.event.issue.labels.*.name, 'component') }}
-        run: echo ${{ github.event.pull_request.labels.*.name }}
+        run: echo "${{ toJSON(github.event.pull_request.labels.*.name) }}"
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
