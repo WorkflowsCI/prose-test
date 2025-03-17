@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check how many component labels
-        if:  startsWith(github.event.issue.labels.*.name, 'component') = 1
+        if:  ${{ startsWith(github.event.issue.labels.*.name, 'component') == 1 }}
         run: echo "${{ toJSON(github.event.pull_request.labels.*.name) }}"
 
       - name: Add needs-triage label
