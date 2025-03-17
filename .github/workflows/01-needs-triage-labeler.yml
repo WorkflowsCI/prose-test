@@ -17,7 +17,7 @@ jobs:
         run: echo "${{ toJSON(github.event.issue.labels.*.name) }}" #prints out list of labels
         
       - name: any domain 
-        run: echo "${{ startsWith(github.event.issue.labels.*.name, 'Domain') }}"
+        run: echo "${{ startsWith(fromJSON(github.event.issue.labels.*.name), 'domain')) }}"
 
       - name: Add needs-triage label
         uses: srvaroa/labeler@v1.13.0
