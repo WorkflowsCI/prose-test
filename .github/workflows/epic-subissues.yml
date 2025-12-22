@@ -53,9 +53,6 @@ jobs:
                 }
               });
 
-              //const createdId = created.data && created.data.id;
-              //const createdNumber = created.data && created.data.number;
-              //console.log(`Created issue #${createdNumber} (id=${createdId}) for "${subissue.title}"`);
               console.log(`Created issue #${created.data.number} for "${subissue.title}"`);
 
               if (!created.data.id) {
