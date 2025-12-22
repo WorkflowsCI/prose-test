@@ -42,20 +42,33 @@ jobs:
             ];
 
             for (const subissue of subissues) {
-              await github.request(
-              'POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues',
-              {
+              // 1) Create the child issue (Task)
+              const created = await github.request('POST /repos/{owner}/{repo}/issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: issue.number,
-                sub_issue_id: subissue.data.id,
                 title: subissue.title,
                 body: subissue.body,
                 issue_type: {
                   name: 'Task'
                 }
-              }
-            );
+              });
 
-              console.log(`Created Task subissue: ${subissue.title}`);
+              const createdId = created.data && created.data.id;
+              const createdNumber = created.data && created.data.number;
+              console.log(`Created issue #${createdNumber} (id=${createdId}) for "${subissue.title}"`);
+
+              if (!createdId) {
+                console.error('Failed to get created issue id; skipping linking.');
+                continue;
+              }
+
+              // 2) Link the newly created issue as a sub-issue of the Epic
+              await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                sub_issue_id: createdId
+              });
+
+              console.log(`Linked created issue #${createdNumber} as a Task subissue of Epic #${issue.number}`);
             }
