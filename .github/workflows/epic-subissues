@@ -1,0 +1,57 @@
+name: Create subissues for Epic issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  create-subissues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Task subissues attached to Epic
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+
+            // Only proceed if issue type is Epic
+            if (!issue.type || issue.type.name !== 'Epic') {
+              console.log('Issue is not of type Epic. Skipping.');
+              return;
+            }
+
+            console.log('Epic detected. Creating Task subissues...');
+
+            const subissues = [
+              {
+                title: 'my first subissue',
+                body: 'hello world!'
+              },
+              {
+                title: 'my second subissue',
+                body: 'another subtask'
+              },
+              {
+                title: 'my third subissue',
+                body: 'yet another subtask'
+              }
+            ];
+
+            for (const subissue of subissues) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: subissue.title,
+                body: subissue.body,
+                parent_issue_id: issue.id,
+                issue_type: {
+                  name: 'Task'
+                }
+              });
+
+              console.log(`Created Task subissue: ${subissue.title}`);
+            }
