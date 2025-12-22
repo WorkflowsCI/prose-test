@@ -42,16 +42,30 @@ jobs:
             ];
 
             for (const subissue of subissues) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: subissue.title,
-                body: subissue.body,
-                parent_issue_id: issue.id,
-                issue_type: {
-                  name: 'Task'
+              gh api graphql -H GraphQL-Features:issue_types -H GraphQL-Features:sub_issues -f parrentIssueId="$parent_issue_id" -f childIssueId="$child_issue_id" -f query='
+                mutation($parrentIssueId: ID!, $childIssueId: ID!) {
+                  addSubIssue(input: { issueId: $parrentIssueId, subIssueId: $childIssueId }) {
+                    issue {
+                      title
+                      number
+                      url
+                      id
+                      issueType {
+                        name
+                      }
+                    }
+                    subIssue {
+                      title
+                      number
+                      url
+                      id
+                      issueType {
+                        name
+                      }
+                    }
+                  }
                 }
-              });
+              };
 
               console.log(`Created Task subissue: ${subissue.title}`);
             }
