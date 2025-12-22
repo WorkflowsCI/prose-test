@@ -53,9 +53,10 @@ jobs:
                 }
               });
 
-              const createdId = created.data && created.data.id;
-              const createdNumber = created.data && created.data.number;
-              console.log(`Created issue #${createdNumber} (id=${createdId}) for "${subissue.title}"`);
+              //const createdId = created.data && created.data.id;
+              //const createdNumber = created.data && created.data.number;
+              //console.log(`Created issue #${createdNumber} (id=${createdId}) for "${subissue.title}"`);
+              console.log(`Created issue #${created.data.number} for "${subissue.title}"`);
 
               if (!createdId) {
                 console.error('Failed to get created issue id; skipping linking.');
@@ -67,8 +68,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                sub_issue_id: createdId
+                sub_issue_id: created.data.id
               });
 
-              console.log(`Linked created issue #${createdNumber} as a Task subissue of Epic #${issue.number}`);
+              console.log(`Linked created issue #${created.data.number} as a Task subissue of Epic #${issue.number}`);
             }
