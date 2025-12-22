@@ -48,7 +48,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                issue_id: subissue.id,
+                sub_issue_id: subissue.id,
                 title: subissue.title,
                 body: subissue.body,
                 issue_type: {
