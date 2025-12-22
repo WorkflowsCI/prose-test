@@ -58,7 +58,7 @@ jobs:
               //console.log(`Created issue #${createdNumber} (id=${createdId}) for "${subissue.title}"`);
               console.log(`Created issue #${created.data.number} for "${subissue.title}"`);
 
-              if (!createdId) {
+              if (!created.data.id) {
                 console.error('Failed to get created issue id; skipping linking.');
                 continue;
               }
