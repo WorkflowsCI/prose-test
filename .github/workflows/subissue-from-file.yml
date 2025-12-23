@@ -35,6 +35,7 @@ jobs:
         run: |
           gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
           echo "CHILD_ID=${{ github.event.issue.id }}" >> $GITHUB_ENV
+          echo "CHILD_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
@@ -50,7 +51,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ env.PARENT_NUM }},
-              sub_issue_id: ${{ env.CHILD.id} }
+              sub_issue_id: ${{ env.CHILD_ID }}
             });
 
-            console.log(`Linked created issue #${{ env.CHILD.number }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
+            console.log(`Linked created issue #${{ env.CHILD_NUM }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
