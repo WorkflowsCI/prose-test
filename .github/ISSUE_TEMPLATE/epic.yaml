@@ -6,3 +6,10 @@ body:
     - type: markdown
       attributes:
           value: This is going to be an amazing feature.
+    - type: checkboxes
+      id: def-of-done
+      attributes:
+        label: Will this be super cool
+        description: Please use this checklist to indicate standards.
+        options:
+          - label: This will definitely be cool
