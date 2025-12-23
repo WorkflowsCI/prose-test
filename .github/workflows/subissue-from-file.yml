@@ -16,7 +16,9 @@ jobs:
     steps:
       - name: Get Parent Numbers
         id: get-parent
-        run: echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
+        run: |
+          echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
+          echo "PARENT_URL={github.event.issue.html_url}/sub_issues" >> $GITHUB_ENV
         
       - name: Checkout repo and get parent numbers
         uses: actions/checkout@v3
@@ -29,14 +31,4 @@ jobs:
           echo "CHILD_NUM=$(gh api $CHILD --jq .number)" >> $GITHUB_ENV
 
       - name: Attach issue to to Epic
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: ${{ steps.get-parent.outputs.PARENT_NUM }},
-                sub_issue_id: $CHILD_ID
-              });
-
-              console.log(`Linked created issue #{env.CHILD_NUM} as a Task subissue of Epic #${env.PARENT_NUM}`);
+        run: gh api -X POST $PARENT_URL -F sub_issue_id=$CHILD_ID
