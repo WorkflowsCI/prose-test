@@ -21,24 +21,23 @@ jobs:
       - name: Create issue from file
         id: a11y-design
         run: |
-          echo "CHILD=$(gh issue create \
+          gh issue create \
             --title "Totes auto-created" \
-            --body-file .github/ISSUE_TEMPLATE/epics/test.md)" >> $GITHUB_ENV
+            --body-file .github/ISSUE_TEMPLATE/epics/test.md"
+          echo "CHILD=context.issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           
       - name: Attach issue to to Epic
-        uses: actions/github-script@v7
-        with:
-          script: |
+        run: |
 
             // 2) Link the newly created issue as a sub-issue of the Epic
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ env.PARENT_NUM }},
-              sub_issue_id: ${{ steps.a11y-design.outputs.issue.id }}
+              sub_issue_id: ${{ env.CHILD.id }}
             });
 
             console.log(`Linked created issue #${{ env.CHILD.number }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
