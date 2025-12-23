@@ -1,4 +1,8 @@
 name: Am an Epic
-about: Describe this issue template's purpose here.
+description: Describe this issue template's purpose here.
 title: Am an Epic
 type: Epic
+body:
+    - type: markdown
+      attributes:
+          value: This is going to be an amazing feature.
