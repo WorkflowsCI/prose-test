@@ -29,11 +29,13 @@ jobs:
           echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
-        id: a11y-design
         run: |
           echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
-          echo "CHILD_ID=$(gh issue view $CHILD --json id --jq '.id')" >> $GITHUB_ENV
           echo "CHILD_NUM=$(gh api $CHILD --jq .number)" >> $GITHUB_ENV
+      
+      - name: Get Issue ID
+        run: |
+          echo "CHILD_ID=$(gh issue view ${{ env.CHILD }} --json id --jq '.id')" >> $GITHUB_ENV
 
       - name: Attach issue to to Epic
         run: |
