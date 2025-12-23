@@ -47,7 +47,7 @@ jobs:
                 repo: context.repo.repo,
                 title: subissue.title,
                 body: subissue.body,
-                issueType: {
+                issue_type: {
                   name: 'Task'
                 }
               });
