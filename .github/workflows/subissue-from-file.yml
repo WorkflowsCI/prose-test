@@ -22,7 +22,7 @@ jobs:
         id: a11y-design
         run: |
           gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md"
-          echo "CHILD=context.issue" >> $GITHUB_ENV
+          echo "CHILD_ID=context.issue.id" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -34,5 +34,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ env.PARENT_NUM }},
-              sub_issue_id: ${{ env.CHILD.id }},
+              sub_issue_id: ${{ env.CHILD_ID }}
             });
