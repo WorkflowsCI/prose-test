@@ -24,7 +24,7 @@ jobs:
               return;
             }
 
-            echo "PARENT_NUM=issue.number" >> $GITHUB_ENV
+            echo "PARENT_NUM=issue.number" >> $GITHUB_ENV;
             console.log('Epic detected. Creating Task subissues...');
       
       - name: Checkout repo
