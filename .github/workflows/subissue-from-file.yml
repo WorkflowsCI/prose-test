@@ -21,12 +21,9 @@ jobs:
       - name: Create issue from file
         id: a11y-design
         run: |
-          const child=$(gh issue create \
+          echo "CHILD=$(gh issue create \
             --title "Totes auto-created" \
-            --body-file .github/ISSUE_TEMPLATE/epics/test.md)
-          
-          echo "CHILD_NUM=child.number" >> $GITHUB_ENV
-          echo "CHILD_ID=child.id" >> $GITHUB_ENV
+            --body-file .github/ISSUE_TEMPLATE/epics/test.md)" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -41,7 +38,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ env.PARENT_NUM }},
-              sub_issue_id: ${{ env.CHILD_ID }}
+              sub_issue_id: ${{ env.CHILD.id }}
             });
 
-            console.log(`Linked created issue #${{ env.CHILD_NUM }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
+            console.log(`Linked created issue #${{ env.CHILD.number }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
