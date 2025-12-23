@@ -1,0 +1,69 @@
+name: Create subissues for Epic issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  create-subissues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create Task subissues attached to Epic
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+
+            if (!issue.type || issue.type.name !== 'Epic') {
+              console.log('Issue is not of type Epic. Skipping.');
+              return;
+            }
+
+            console.log('Epic detected. Creating Task subissues...');
+      
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        
+      - name: Create issue from file
+        id: a11y-design
+        run: |
+          gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
+          echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          echo "ISSUE=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+
+          
+      - name: Attach issue to to Epic
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // 1) Create the child issue (Task)
+            const created = await github.request('POST /repos/{owner}/{repo}/issues', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: ${{steps.a11y-design.issue.title}},
+              body: ${{steps.a11y-design.issue.body}},
+              issue_type: {
+                name: 'Task'
+              }
+            });
+
+            console.log(`Created issue #${created.data.number} for "${steps.a11y-design.issue.title}"`);
+
+            if (!created.data.id) {
+              console.error('Failed to get created issue id; skipping linking.');
+              continue;
+            }
+
+            // 2) Link the newly created issue as a sub-issue of the Epic
+            await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              sub_issue_id: created.data.id
+            });
+
+            console.log(`Linked created issue #${created.data.number} as a Task subissue of Epic #${issue.number}`);
