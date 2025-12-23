@@ -17,6 +17,7 @@ jobs:
       - name: Save issue URL to env
         run: |
           echo "PARENT_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+          echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -24,6 +25,9 @@ jobs:
       - name: Get parent issue data
         run: |
           echo "ADD_SUBISSUE_API=${{ env.PARENT_URL }}/sub_issues" >> $GITHUB_ENV
+          echo "OWNER=${{ context.repo.owner }}"
+          echo "REPO=${{ context.repo.repo }}"
+          echo "API_URL=/repos/{OWNER}/{REPO}/issues/{PARENT_NUM}/sub_issues
         
       - name: Create issue from file
         id: a11y-design
@@ -34,4 +38,4 @@ jobs:
 
       - name: Attach issue to to Epic
         run: |
-          gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
+          gh api -X POST $API_URL -F sub_issue_id=$CHILD_ID
