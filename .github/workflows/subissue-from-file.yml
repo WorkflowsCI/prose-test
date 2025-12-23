@@ -19,7 +19,7 @@ jobs:
 
       - name: Get parent issue data
         run: |
-          echo "ISSUE_URL=github.event.issue.html_url" >> $GITHUB_ENV
+          echo "ISSUE_URL=context.payload.issue.html_url" >> $GITHUB_ENV
           echo "ADD_SUBISSUE_API=${{ ISSUE_URL }}/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
