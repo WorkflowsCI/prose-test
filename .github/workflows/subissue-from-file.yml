@@ -15,6 +15,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Get Parent Numbers
+        id: get-parent
         run: echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
         
       - name: Checkout repo and get parent numbers
@@ -34,7 +35,7 @@ jobs:
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: env.PARENT_NUM,
+                issue_number: ${{ steps.get-parent.outputs.PARENT_NUM }},
                 sub_issue_id: $CHILD_ID
               });
 
