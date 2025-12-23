@@ -32,8 +32,10 @@ jobs:
         id: a11y-design
         run: |
           gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
-          echo "GH_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          echo "ISSUE=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+          echo "ISSUE_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.html_url }}
 
           
       - name: Attach issue to to Epic
@@ -62,8 +64,8 @@ jobs:
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: issue.number,
+              issue_number: ${{steps.a11y-design.outputs.ISSUE_NUM}},
               sub_issue_id: created.data.id
             });
 
-            console.log(`Linked created issue #${created.data.number} as a Task subissue of Epic #${issue.number}`);
+            console.log(`Linked created issue #${created.data.number} as a Task subissue of Epic #${ISSUE_NUM}`);
