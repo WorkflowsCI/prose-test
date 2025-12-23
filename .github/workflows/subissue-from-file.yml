@@ -24,7 +24,7 @@ jobs:
               return;
             }
 
-            echo "PARENT_NUM=issue.number" >> $GITHUB_OUTPUTS;
+            echo "PARENT_NUM=issue.number" >> $GITHUB_ENV;
             console.log('Epic detected. Creating Task subissues...');
       
       - name: Checkout repo
@@ -34,7 +34,7 @@ jobs:
         id: a11y-design
         run: |
           gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
-          echo "CHILD=${{ github.event.issue }}" >> $GITHUB_OUTPUTS
+          echo "CHILD=${{ github.event.issue }}" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
@@ -49,8 +49,8 @@ jobs:
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: ${{steps.get-parent.outputs.PARENT_NUM}},
-              sub_issue_id: ${{steps.a11y-design.outputs.CHILD.id}}
+              issue_number: ${{ env.PARENT_NUM }},
+              sub_issue_id: ${{ env.CHILD.id} }
             });
 
-            console.log(`Linked created issue #${{ steps.a11y-design.outputs.CHILD.number }} as a Task subissue of Epic #${PARENT_NUM}`);
+            console.log(`Linked created issue #${{ env.CHILD.number }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
