@@ -18,7 +18,7 @@ jobs:
         id: get-parent
         run: |
           echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
-          echo "PARENT_URL={github.event.issue.html_url}/sub_issues" >> $GITHUB_ENV
+          echo "PARENT_URL=${{ github.event.issue.html_url }}/sub_issues" >> $GITHUB_ENV
         
       - name: Checkout repo and get parent numbers
         uses: actions/checkout@v3
