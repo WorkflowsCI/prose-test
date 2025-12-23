@@ -49,8 +49,8 @@ jobs:
             await github.request('POST /repos/{owner}/{repo}/issues/{PARENT_NUM}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: ${{PARENT_NUM}},
-              sub_issue_id: ${{CHILD.id}}
+              issue_number: ${{steps.get-parent.outputs.PARENT_NUM}},
+              sub_issue_id: ${{steps.a11y-design.outputs.CHILD.id}}
             });
 
             console.log(`Linked created issue #${created.data.number} as a Task subissue of Epic #${ISSUE_NUM}`);
