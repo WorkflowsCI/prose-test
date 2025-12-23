@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Save issue URL to env
         run: |
-          echo "PARENT_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+          echo "PARENT_URL=github.event.issue.html_url" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v3
