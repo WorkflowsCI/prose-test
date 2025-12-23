@@ -1,0 +1,16 @@
+name: Testing Stuff
+type: Task
+body:
+- type: markdown
+      attributes:
+          value: |
+              This issue should be discussed after the initial drafts for necessary designs. It can also be reopened as needed.
+              
+              It’s important to consider the design implications for not only different disabilities, but also different types of assistive technology. The design should be able to either adapt to the different needs, or offer an equivalent alternative (think captions for videos or transcripts for podcasts). Discuss the following scenarios, consider which points apply, and then evaluate whether the design successfully addresses the relevant criteria.
+- type: checkboxes
+      attributes:
+        label: Scenario: Blind person using a screen reader
+        description: Please use this checklist to indicate that the deliverable meets Shopware standards.
+        options:
+          - label: If all images/videos/icons were removed, does the design still make sense?
+          - label: Which images/videos/icons/similar visual content cannot be removed or replaced and will require text alternatives?
