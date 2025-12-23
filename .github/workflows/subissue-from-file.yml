@@ -32,10 +32,10 @@ jobs:
         id: a11y-design
         run: |
           echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
-          echo "CHILD_ID=$(gh api $CHILD --jq .id)" >> $GITHUB_ENV
+          echo "CHILD_ID=$(gh api $CHILD --jq id)" >> $GITHUB_ENV
           echo "ID2=$CHILD.id" >> $GITHUB_ENV
           echo "CHILD_NUM=$(gh api $CHILD --jq .number)" >> $GITHUB_ENV
 
       - name: Attach issue to to Epic
         run: |
-          gh api -X POST $API_URL -F sub_issue_id=$ID2
+          gh api -X POST $API_URL -F sub_issue_id=$CHILD_ID
