@@ -25,8 +25,17 @@ jobs:
         run: |
           echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
           echo "CHILD_ID=$(gh api $CHILD --jq .id)" >> $GITHUB_ENV
-          echo "CHILD_URL=$(gh api $CHILD --jq .html_url)" >> $GITHUB_ENV
+          echo "CHILD_NUM=$(gh api $CHILD --jq .number)" >> $GITHUB_ENV
 
       - name: Attach issue to to Epic
-        run: |  
-          gh api -X POST ${{ env.CHILD_URL }}/sub_issues -F sub_issue_id=${{ env.CHILD_ID }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: $PARENT_NUM,
+                sub_issue_id: $CHILD_ID
+              });
+
+              console.log(`Linked created issue #{env.CHILD_NUM} as a Task subissue of Epic #${env.PARENT_NUM}`);
