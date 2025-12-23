@@ -10,25 +10,12 @@ permissions:
 jobs:
   create-subissues:
     runs-on: ubuntu-latest
-
+    if: (issue.type == 'Epic')
     steps:
       - name: Check if Epic
-        id: is-epic
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const issue = context.payload.issue;
+        id: get-parent
+        run: echo "PARENT_NUM=context.payload.issue.number" >> $GITHUB_ENV
 
-            if (!issue.type || issue.type.name !== 'Epic') {
-              console.log('Issue is not of type Epic. Skipping.');
-              return;
-            }
-
-            console.log('Epic detected. Creating Task subissues...');
-
-      - name: Get Parent Issue
-        run: echo "PARENT_NUM=issue.number" >> $GITHUB_ENV
-      
       - name: Checkout repo
         uses: actions/checkout@v3
         
