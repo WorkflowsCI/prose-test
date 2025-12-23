@@ -23,14 +23,13 @@ jobs:
         run: |
           gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md"
           echo "CHILD=context.issue" >> $GITHUB_ENV
+          console.log(CHILD.number)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           
       - name: Attach issue to to Epic
         run: |
-
-            // 2) Link the newly created issue as a sub-issue of the Epic
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
