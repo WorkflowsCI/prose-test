@@ -18,7 +18,6 @@ jobs:
           script: |
             const issue = context.payload.issue;
 
-            // Only proceed if issue type is Epic
             if (!issue.type || issue.type.name !== 'Epic') {
               console.log('Issue is not of type Epic. Skipping.');
               return;
@@ -42,15 +41,13 @@ jobs:
             ];
 
             for (const subissue of subissues) {
-              // 1) Create the child issue (Task)
+              # 1) Create the child issue (Task)
               const created = await github.request('POST /repos/{owner}/{repo}/issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 title: subissue.title,
                 body: subissue.body,
-                issue_type: {
-                  name: 'Task'
-                }
+                type: 'Task'
               });
 
               console.log(`Created issue #${created.data.number} for "${subissue.title}"`);
@@ -60,7 +57,7 @@ jobs:
                 continue;
               }
 
-              // 2) Link the newly created issue as a sub-issue of the Epic
+              # 2) Link the newly created issue as a sub-issue of the Epic
               await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
