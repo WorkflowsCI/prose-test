@@ -21,7 +21,7 @@ jobs:
       - name: Create issue from file
         id: a11y-design
         run: |
-          gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md"
+          gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md"
           echo "CHILD=context.issue" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
