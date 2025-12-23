@@ -23,8 +23,7 @@ jobs:
         run: |
           ISSUE_JSON=$(gh issue create \
             --title "Totes auto-created" \
-            --body-file .github/ISSUE_TEMPLATE/epics/test.md \
-            --json number, id)
+            --body-file .github/ISSUE_TEMPLATE/epics/test.md)
             
           CHILD_NUM=$(echo "$ISSUE_JSON" | jq -r '.number')
           CHILD_ID=$(echo "$ISSUE_JSON" | jq -r '.id')
