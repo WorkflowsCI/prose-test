@@ -26,6 +26,7 @@ jobs:
           echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
           echo "CHILD_ID=$(gh api $CHILD --jq .id)" >> $GITHUB_ENV
           echo "CHILD_URL=$(gh api $CHILD --jq .html_url)" >> $GITHUB_ENV
+          echo $CHILD_URL
 
       - name: Attach issue to to Epic
         run: |  
