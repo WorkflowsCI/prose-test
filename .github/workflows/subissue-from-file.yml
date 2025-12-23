@@ -23,7 +23,7 @@ jobs:
 
       - name: Get parent issue data
         run: |
-          echo "ADD_SUBISSUE_API=${{ PARENT_URL }}/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=${{ env.PARENT_URL }}/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
         id: a11y-design
