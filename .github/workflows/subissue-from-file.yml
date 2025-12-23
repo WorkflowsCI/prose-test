@@ -7,10 +7,6 @@ on:
 permissions:
   issues: write
 
-env:
-  ISSUE_URL: ${{ github.event.issue.html_url }}
-  PARENT_URL: ${{ ISSUE_URL }}/sub_issues
-
 jobs:
   create-subissues:
     runs-on: ubuntu-latest
@@ -20,6 +16,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Get parent issue data
+        run: |
+          echo "ISSUE_URL=github.event.issue.html_url" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=${{ ISSUE_URL }}/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
         id: a11y-design
@@ -30,4 +31,4 @@ jobs:
 
       - name: Attach issue to to Epic
         run: |
-          gh api -X POST $PARENT_URL -F sub_issue_id=$CHILD_ID
+          gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
