@@ -34,7 +34,7 @@ jobs:
         id: a11y-design
         run: |
           gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
-          echo "CHILD=${{ github.event.issue }}" >> $GITHUB_ENV
+          echo "CHILD_ID=${{ github.event.issue.id }}" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
