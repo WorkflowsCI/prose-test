@@ -10,7 +10,7 @@ permissions:
 jobs:
   create-subissues:
     runs-on: ubuntu-latest
-    if: (github.event.payload.issue.type == 'Epic')
+    if: github.event.issue.type == 'Epic'
     steps:
       - name: Check if Epic
         id: get-parent
