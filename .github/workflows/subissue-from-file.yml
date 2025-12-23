@@ -28,7 +28,9 @@ jobs:
 
           
       - name: Attach issue to to Epic
-        run: |
+        uses: actions/github-script@v7
+        with:
+          script: |
             await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
               owner: context.repo.owner,
               repo: context.repo.repo,
