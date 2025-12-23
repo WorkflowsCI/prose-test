@@ -13,3 +13,6 @@ jobs:
 
     steps:
       - run: gh issue create --body-file ../ISSUE_TEMPLATE/epics/test.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.html_url }}
