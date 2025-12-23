@@ -41,7 +41,7 @@ jobs:
             ];
 
             for (const subissue of subissues) {
-              # 1) Create the child issue (Task)
+              // 1) Create the child issue (Task)
               const created = await github.request('POST /repos/{owner}/{repo}/issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -59,7 +59,7 @@ jobs:
                 continue;
               }
 
-              # 2) Link the newly created issue as a sub-issue of the Epic
+              // 2) Link the newly created issue as a sub-issue of the Epic
               await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/sub_issues', {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
