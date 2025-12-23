@@ -48,7 +48,7 @@ jobs:
                 title: subissue.title,
                 body: subissue.body,
                 issueType: {
-                  'Task'
+                  name: 'Task'
                 }
               });
 
