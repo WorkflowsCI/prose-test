@@ -21,12 +21,18 @@ jobs:
       - name: Create issue from file
         id: a11y-design
         run: |
-          const child = gh issue create --title "Totes auto-created" --body-file .github/ISSUE_TEMPLATE/epics/test.md
-          echo "CHILD_ID=child.id" >> $GITHUB_ENV
-          echo "CHILD_NUM=child.number" >> $GITHUB_ENV
+          ISSUE_JSON=$(gh issue create \
+            --title "Totes auto-created" \
+            --body-file .github/ISSUE_TEMPLATE/epics/test.md \
+            --json number, id)
+            
+          CHILD_NUM=$(echo "$ISSUE_JSON" | jq -r '.number')
+          CHILD_ID=$(echo "$ISSUE_JSON" | jq -r '.id')
+          
+          echo "CHILD_NUM=$ISSUE_NUMBER" >> $GITHUB_ENV
+          echo "CHILD_ID=$ISSUE_ID" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE: ${{ github.event.issue.html_url }}
 
           
       - name: Attach issue to to Epic
