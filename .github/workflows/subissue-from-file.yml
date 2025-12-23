@@ -38,7 +38,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ env.PARENT_NUM }},
-              sub_issue_id: ${{ env.CHILD.id }}
+              sub_issue_id: ${{ steps.a11y-design.outputs.issue.id }}
             });
 
             console.log(`Linked created issue #${{ env.CHILD.number }} as a Task subissue of Epic #${{ env.PARENT_NUM }}`);
