@@ -11,6 +11,8 @@ jobs:
   create-subissues:
     runs-on: ubuntu-latest
     if: github.event.issue.type.name == 'Epic'
+    env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Get Parent Numbers
         run: echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
@@ -23,8 +25,6 @@ jobs:
         run: |
           echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
           echo "CHILD_ID=$(gh api $CHILD --jq .id)" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Attach issue to to Epic
         run: |  
