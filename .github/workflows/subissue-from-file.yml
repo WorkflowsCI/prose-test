@@ -13,14 +13,17 @@ jobs:
     if: github.event.issue.type.name == 'Epic'
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE: ${{ github.event.issue }}
     steps:
+      - name: Save issue URL to env
+        run: |
+          echo "PARENT_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
+          
       - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Get parent issue data
         run: |
-          echo "ADD_SUBISSUE_API=${{ ISSUE }}/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=${{ PARENT_URL }}/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
         id: a11y-design
