@@ -7,15 +7,16 @@ on:
 permissions:
   issues: write
 
+env:
+  ISSUE_URL: github.event.issue.html_url
+  PARENT_URL: ${{ ISSUE_URL }}/sub_issues
+
 jobs:
   create-subissues:
     runs-on: ubuntu-latest
     if: github.event.issue.type.name == 'Epic'
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_NUM: github.event.issue.number
-        ISSUE_URL: github.event.issue.html_url
-        PARENT_URL: ${{ ISSUE_URL }}/sub_issues
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
