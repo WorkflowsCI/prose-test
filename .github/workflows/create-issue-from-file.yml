@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: gh issue create --body-file /.github/ISSUE_TEMPLATE/epics/test.md
+      - run: gh issue create --body-file .github/ISSUE_TEMPLATE/epics/test.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
