@@ -13,14 +13,11 @@ jobs:
     if: github.event.issue.type.name == 'Epic'
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE_NUM: github.event.issue.number
+        ISSUE_URL: github.event.issue.html_url
+        PARENT_URL: ${{ ISSUE_URL }}/sub_issues
     steps:
-      - name: Get Parent Numbers
-        id: get-parent
-        run: |
-          echo "PARENT_NUM=github.event.issue.number" >> $GITHUB_ENV
-          echo "PARENT_URL=${{ github.event.issue.html_url }}/sub_issues" >> $GITHUB_ENV
-        
-      - name: Checkout repo and get parent numbers
+      - name: Checkout repo
         uses: actions/checkout@v3
         
       - name: Create issue from file
@@ -31,4 +28,5 @@ jobs:
           echo "CHILD_NUM=$(gh api $CHILD --jq .number)" >> $GITHUB_ENV
 
       - name: Attach issue to to Epic
-        run: gh api -X POST $PARENT_URL -F sub_issue_id=$CHILD_ID
+        run: |
+          gh api -X POST $PARENT_URL -F sub_issue_id=$CHILD_ID
