@@ -42,4 +42,4 @@ jobs:
           
       - name: Attach issue to to Epic
         run: |
-          gh api -X POST $API_URL -F sub_issue_id=$CHILD_NUM
+          gh api -X POST $API_URL -F sub_issue_id=$CHILD_ID
