@@ -30,7 +30,7 @@ jobs:
         
       - name: Create issue from file
         run: |
-          echo "CHILD=$(gh issue create --title "Totes auto-created" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
+          echo "CHILD=$(gh issue create --title "Autocreated subissue with type task" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
       
       - name: Get Issue Number
         run: |
@@ -43,3 +43,7 @@ jobs:
       - name: Attach issue to to Epic
         run: |
           gh api -X POST $API_URL -F sub_issue_id=$CHILD_ID
+
+      - name: Set subissue type to Task
+        run: |
+          gh api -X PATCH /repos/WorkflowsCI/prose-test/issues/${{ env.CHILD_NUM }} --field type=Task
