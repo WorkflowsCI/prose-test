@@ -24,9 +24,10 @@ jobs:
 
       - name: Get parent issue data
         run: |
-          echo "ADD_SUBISSUE_API=${{ env.PARENT_URL }}/sub_issues" >> $GITHUB_ENV
           echo "REPO=${{ github.repository }}" >> $GITHUB_ENV
           echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
+          echo "BASE_URL=/repos/${{ github.repository }}/issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=$BASEURL/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
         run: |
@@ -42,7 +43,7 @@ jobs:
           
       - name: Attach issue to to Epic
         run: |
-          gh api -X POST $API_URL -F sub_issue_id=$CHILD_ID
+          gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
 
       - name: Set subissue type to Task
         run: |
