@@ -27,6 +27,7 @@ jobs:
         run: |
           echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
           echo "ADD_SUBISSUE_API=$BASEURL/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API2=${{ env.BASEURL }}/${{ env.PARENT_NUM }}/sub_issues" >> $GITHUB_ENV
         
       - name: Create issue from file
         run: |
