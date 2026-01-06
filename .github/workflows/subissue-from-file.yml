@@ -18,7 +18,6 @@ jobs:
         run: |
           echo "PARENT_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
           echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
-          echo "BASE_URL=/repos/${{ github.repository }}/issues/" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -26,19 +25,17 @@ jobs:
       - name: Get parent issue data
         run: |
           echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API=$BASEURL$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API2=${{ env.BASEURL }}${{ env.PARENT_NUM }}/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API3=${BASEURL}${PARENT_NUM}/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
 
       - name: Create issue from file
         run: |
           echo "CHILD=$(gh issue create --title "Autocreated subissue with type task" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
       
-      - name: Get Issue Number
+      - name: Get child issue Number
         run: |
           echo "CHILD_NUM=$(gh issue view ${{ env.CHILD }} --json number --jq '.number')" >> $GITHUB_ENV
 
-      - name: Get Issue Database ID
+      - name: Get child issue database ID
         run: |
           echo "CHILD_ID=$(gh api /repos/WorkflowsCI/prose-test/issues/${{ env.CHILD_NUM }} --jq .id)" >> $GITHUB_ENV
           
@@ -48,4 +45,4 @@ jobs:
 
       - name: Set subissue type to Task
         run: |
-          gh api -X PATCH /repos/WorkflowsCI/prose-test/issues/${{ env.CHILD_NUM }} --field type=Task
+          gh api -X PATCH /repos/${{ github.repository }}/issues/${{ env.CHILD_NUM }} --field type=Task
