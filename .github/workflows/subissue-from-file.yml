@@ -15,15 +15,15 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Save issue URL to env
-        run: echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
+        run: |
+          echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
+          echo "TEST_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Get parent issue data
-        run: |
-          echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
+      - name: Get add subissue api
+        run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
 
       - name: Create issue from file
         run: echo "CHILD=$(gh issue create --title "Autocreated subissue with type task" --body-file ".github/ISSUE_TEMPLATE/epics/test.md")" >> $GITHUB_ENV 
@@ -34,7 +34,7 @@ jobs:
       - name: Get child issue database ID
         run: echo "CHILD_ID=$(gh api /repos/${{ github.repository }}/issues/$CHILD_NUM --jq .id)" >> $GITHUB_ENV
           
-      - name: Attach child issue to to Epic
+      - name: Attach child issue to Epic
         run: gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
 
       - name: Set subissue type to Task
