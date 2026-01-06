@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "PARENT_URL=${{ github.event.issue.html_url }}" >> $GITHUB_ENV
           echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
-          echo "BASE_URL=/repos/${{ github.repository }}/issues" >> $GITHUB_ENV
+          echo "BASE_URL=/repos/${{ github.repository }}/issues/" >> $GITHUB_ENV
           
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -26,9 +26,9 @@ jobs:
       - name: Get parent issue data
         run: |
           echo "API_URL=/repos/WorkflowsCI/prose-test/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API=$BASEURL/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API2=${{ env.BASEURL }}/${{ env.PARENT_NUM }}/sub_issues" >> $GITHUB_ENV
-          echo "ADD_SUBISSUE_API3=${BASEURL}/${PARENT_NUM}/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API=$BASEURL$PARENT_NUM/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API2=${{ env.BASEURL }}${{ env.PARENT_NUM }}/sub_issues" >> $GITHUB_ENV
+          echo "ADD_SUBISSUE_API3=${BASEURL}${PARENT_NUM}/sub_issues" >> $GITHUB_ENV
 
       - name: Create issue from file
         run: |
