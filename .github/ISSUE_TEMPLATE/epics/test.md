@@ -4,12 +4,6 @@ It’s important to consider the design implications for not only different disa
 
 ## Scenarios
 
-#### Deaf person using a keyboard
-
-- [ ] Are there viewable text-based alternatives for any content containing audio?
-- [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where the path of the focus indicator needs planning?
-- [ ] Are there collections of repeating content we can add skip links too?
-
 #### Sighted person using a mouth stick
 
 - [ ] Can any Drag and Drop functionality also be achieved through a simple mouse click?
@@ -17,11 +11,17 @@ It’s important to consider the design implications for not only different disa
 
 #### Visually impaired person using a screen reader
 
-- [ ] If all images/videos/icons were removed, does the design still make sense?
-- [ ] Which images/videos/icons/similar visual content cannot be removed and will require text alternatives?
+- [ ] If all images/videos/icons/colors were removed, does the design still make sense?
+- [ ] Which images/videos/icons/visual content cannot be removed and will require text alternatives?
 
 #### Sighted person using voice control
 - [ ] Do all interactive elements have visible text labels?
+
+#### Deaf person using a keyboard
+
+- [ ] Is there content that contains audio? If yes, are there viewable text-based alternatives?
+- [ ] Are there collections of repeating content we can add skip links too?
+- [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where the path of the focus indicator needs planning?
 
 #### Visually impaired person using screen magnification
 
