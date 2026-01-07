@@ -52,11 +52,11 @@ jobs:
         id: finding-files        
         run: |
 
-          for file in "$SUBISSUE_DIR"/*md; do
+          for file in $SUBISSUE_DIR do
             if [[ -f "$file" ]]; then
               {
                 echo 'FILELIST<<EOF'
-                find . -name '*.md' -print 
+                find $SUBISSUE_DIR -name '*.md' -print 
                 echo EOF
               } >> "$GITHUB_ENV"
             fi
