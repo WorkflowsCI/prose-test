@@ -52,13 +52,15 @@ jobs:
         id: finding-files        
         run: |
 
+          declare -a myFiles=$(find $SUBISSUE_DIR -name '*.md' -print)
+          echo $myFiles >> $GITHUB_ENV
+
           for file in $SUBISSUE_DIR; do
             if [[ -f "$file" ]]; then
-              {
-                echo 'FILELIST<<EOF'
-                find $SUBISSUE_DIR -name '*.md' -print 
-                echo EOF
-              } >> "$GITHUB_ENV"
+              echo 'FILELIST<<EOF'
+              find $SUBISSUE_DIR -name '*.md' -print 
+              echo EOF
+              echo $FILELIST >> "$GITHUB_ENV"
             fi
           done
 
