@@ -25,7 +25,7 @@ jobs:
           echo "MY_FILELIST=$(gh api /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic)" >> $GITHUB_ENV
 
       - name: Find .md only files
-        run:  echo "TEMPLATES=$($MY_FILELIST --jq '.[].name' | grep '*.md') >> $GITHUB_ENV
+        run: echo "TEMPLATES=$($MY_FILELIST --jq '.[].name' | grep '*.md')" >> $GITHUB_ENV
 
 
       - name: Checkout repo
