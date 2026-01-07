@@ -23,7 +23,7 @@ jobs:
       - name: Find files in correct subdirectory
         run:  | 
           MY_FILELIST=$(gh api --jq '.[].name' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
-          echo $MY_FILELIST >> $GITHUB_ENV
+          echo "$MY_FILELIST" >> $GITHUB_ENV
 
       - name: Checkout repo
         uses: actions/checkout@v3
