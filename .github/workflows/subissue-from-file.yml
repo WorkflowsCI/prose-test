@@ -19,7 +19,9 @@ jobs:
           echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
           echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}" >> $GITHUB_ENV
           echo "TEST_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
-          
+      - name: Find files in correct subdirectory
+        run:  echo "FILELIST=$(gh api --jq '.[].name' /repos/airtower-luna/luna/contents/src)" >> $GITHUB_ENV
+      
       - name: Checkout repo
         uses: actions/checkout@v3
 
