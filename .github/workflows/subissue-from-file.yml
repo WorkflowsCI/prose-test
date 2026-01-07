@@ -22,7 +22,8 @@ jobs:
       
       - name: Find files in correct subdirectory
         run:  | 
-          echo "MY_FILELIST=$(gh api /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic)" >> $GITHUB_ENV
+          MY_FILELIST=$(gh api --jq '.[].name' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
+          print $MY_FILELIST
 
       - name: Find .md only files
         run: echo "TEMPLATES=$($MY_FILELIST --jq '.[].name' | grep '*.md')" >> $GITHUB_ENV
