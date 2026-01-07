@@ -17,6 +17,7 @@ jobs:
       - name: Save issue URL to env
         run: |
           echo "PARENT_NUM=${{ github.event.issue.number }}" >> $GITHUB_ENV
+          echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}" >> $GITHUB_ENV
           echo "TEST_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
           
       - name: Checkout repo
@@ -42,3 +43,29 @@ jobs:
 
       - name: Set subissue type to Task
         run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type=Task
+
+      # Source - https://stackoverflow.com/a
+      # Posted by Charles
+      # Retrieved 2026-01-07, License - CC BY-SA 4.0
+      
+      - name: Finding files
+        id: finding-files        
+        run: |
+          DIR=$SUBISSUE_DIR
+
+          for file in "$DIR"/*md; do
+            if [[ -f "$file" ]]; then
+              {
+                echo 'FILELIST<<EOF'
+                find . -name '*.md' -print 
+                echo EOF
+              } >> "$GITHUB_ENV"
+            fi
+          done
+
+      - name: Do something with each file
+        run: |
+          for i in $FILELIST; do
+            echo "Do something with file ${i}"
+          done  
+
