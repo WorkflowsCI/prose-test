@@ -21,7 +21,7 @@ jobs:
           echo "TEST_API=/repos/${{ github.repository }}/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
       
       - name: Find files in correct subdirectory
-        run:  echo "FILELIST=$(gh api --jq '.[].name' $SUBISSUE_DIR)" >> $GITHUB_ENV
+        run:  echo "FILELIST=$(gh api $SUBISSUE_DIR --jq '.[].name')" >> $GITHUB_ENV
       
       - name: Checkout repo
         uses: actions/checkout@v3
