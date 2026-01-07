@@ -28,6 +28,12 @@ jobs:
             echo EOF
           } >> "$GITHUB_ENV"
 
+      - name: Do something with each file
+        run: |
+          for i in $MY_FILELIST; do
+            echo "Hello ${i}"
+          done  
+
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -51,20 +57,3 @@ jobs:
 
       - name: Set subissue type to Task
         run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type=Task
-
-      # Source - https://stackoverflow.com/a
-      # Posted by Charles
-      # Retrieved 2026-01-07, License - CC BY-SA 4.0
-      
-      - name: Finding files
-        id: finding-files        
-        run: |
-          declare -a myFiles=$(find $SUBISSUE_DIR -type f -name '*.md')
-          echo $myFiles >> $GITHUB_ENV
-
-      - name: Do something with each file
-        run: |
-          for i in $myFiles; do
-            echo "Do something with file ${i}"
-          done  
-
