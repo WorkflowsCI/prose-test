@@ -52,7 +52,7 @@ jobs:
         id: finding-files        
         run: |
 
-          declare -a myFiles=$(find $SUBISSUE_DIR -name '*.md' -print)
+          declare -a myFiles=$(find $SUBISSUE_DIR -type f -name '*.md')
           echo $myFiles >> $GITHUB_ENV
 
           for file in $SUBISSUE_DIR; do
