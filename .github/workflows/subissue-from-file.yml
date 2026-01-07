@@ -52,7 +52,7 @@ jobs:
         id: finding-files        
         run: |
 
-          for file in $SUBISSUE_DIR do
+          for file in $SUBISSUE_DIR; do
             if [[ -f "$file" ]]; then
               {
                 echo 'FILELIST<<EOF'
