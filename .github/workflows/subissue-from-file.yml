@@ -22,8 +22,11 @@ jobs:
       
       - name: Find files in correct subdirectory
         run:  | 
-          MY_FILELIST=$(gh api --jq '.[].name' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
-          echo "$MY_FILELIST" >> $GITHUB_ENV
+          {
+            echo 'MY_FILELIST<<EOF'
+            gh api --jq '.[].name' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
+            echo EOF
+          } >> "$GITHUB_ENV"
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -56,22 +59,12 @@ jobs:
       - name: Finding files
         id: finding-files        
         run: |
-
           declare -a myFiles=$(find $SUBISSUE_DIR -type f -name '*.md')
           echo $myFiles >> $GITHUB_ENV
 
-          for file in $SUBISSUE_DIR; do
-            if [[ -f "$file" ]]; then
-              echo 'FILELIST<<EOF'
-              find $SUBISSUE_DIR -name '*.md' -print 
-              echo EOF
-              echo $FILELIST >> "$GITHUB_ENV"
-            fi
-          done
-
       - name: Do something with each file
         run: |
-          for i in $FILELIST; do
+          for i in $myFiles; do
             echo "Do something with file ${i}"
           done  
 
