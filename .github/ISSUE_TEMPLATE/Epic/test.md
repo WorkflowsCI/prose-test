@@ -1,3 +1,8 @@
+---
+title: A Simple Task
+type: Task
+---
+
 This issue should be discussed after the initial drafts for necessary designs. It can also be reopened as needed.
 
 It’s important to consider the design implications for not only different disabilities, but also different types of assistive technology. The design should be able to either adapt to the different needs, or offer an equivalent alternative (think captions for videos or transcripts for podcasts). Discuss the following scenarios, consider which points apply, and then evaluate whether the design successfully addresses the relevant criteria.
