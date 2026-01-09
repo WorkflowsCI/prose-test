@@ -37,12 +37,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: get the first line
+      - name: get title and type
         run: |
-          TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
-          TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)
-          echo $TITLE >> $GITHUB_ENV
-          echo $TYPE >> $GITHUB_ENV
+          echo "TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)" >> $GITHUB_ENV
+          echo "TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)" >> $GITHUB_ENV
 
       - name: Get add subissue api
         run: |
