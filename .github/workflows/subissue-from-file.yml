@@ -31,7 +31,7 @@ jobs:
       - name: Do something with each file
         run: |
           for i in $MY_FILELIST; do
-            source <(cat << EOF
+            source <(cat << 'EOF'
             $( sed -n '1,/---/p'  ${i} | sed '1d;$d' )
             EOF
             )
