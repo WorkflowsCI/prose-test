@@ -32,8 +32,11 @@ jobs:
         run: |
           for i in $MY_FILELIST; do
             echo "Hello ${i}"
-            awk -v var="title:" 'NR==2 {print NR}' .github/ISSUE_TEMPLATE/Epic/${i}
           done  
+
+      - name: get the first line
+        run: |
+          awk 'NR==1 {print; exit}' .github/ISSUE_TEMPLATE/Epic/test.md
 
       - name: Checkout repo
         uses: actions/checkout@v3
