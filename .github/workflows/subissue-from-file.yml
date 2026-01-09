@@ -32,7 +32,7 @@ jobs:
         run: |
           for i in $MY_FILELIST; do
             echo "Hello ${i}"
-            awk -v var="title:" 'NR==2 {print NR}' /../ISSUE_TEMPLATE/Epic/${i}
+            awk -v var="title:" 'NR==2 {print NR}' .github/ISSUE_TEMPLATE/Epic/${i}
           done  
 
       - name: Checkout repo
