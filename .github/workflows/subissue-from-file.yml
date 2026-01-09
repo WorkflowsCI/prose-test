@@ -31,7 +31,6 @@ jobs:
       - name: Do something with each file
         run: |
           for i in $MY_FILELIST; do
-            echo "Hello ${i}"
             source <(cat << EOF
             $( sed -n '1,/---/p'  ${i} | sed '1d;$d' )
             EOF
@@ -39,6 +38,7 @@ jobs:
 
             echo " *title*: [ ${title} ]"
             echo " *type*: [ ${type} ]"
+            echo "Hello ${i}"
           done  
 
       - name: Checkout repo
