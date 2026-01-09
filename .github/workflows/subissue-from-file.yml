@@ -40,7 +40,9 @@ jobs:
       - name: get the first line
         run: |
           TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
+          TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)
           echo $TITLE
+          echo $TYPE
 
       - name: Get add subissue api
         run: |
