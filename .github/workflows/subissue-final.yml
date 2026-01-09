@@ -14,13 +14,13 @@ jobs:
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Get add-subissue api
+      - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
 
       - name: Save directory of subissues
         run: echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic" >> $GITHUB_ENV
       
-      - name: Find markdown files in correct subdirectory
+      - name: Make a list of all markdown files in correct subdirectory
         run:  | 
           {
             echo 'MY_FILELIST<<EOF'
@@ -31,10 +31,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Create issue for each file and attach as subissue to newly created epic
+      - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
           for file in $MY_FILELIST; do
-            # get title and type
+            # get title and type from frontmatter
             TITLE=$(awk 'NR==2 {print substr($0, 8)}' $SUBISSUE_DIR/${file} )
             TYPE=$(awk 'NR==3 {print substr($0, 7)}' $SUBISSUE_DIR/${file} )
 
@@ -42,7 +42,8 @@ jobs:
             CHILD=$(gh issue create --title "$TITLE" --body-file "$SUBISSUE_DIR/${file}")
             CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')
 
-            # get issue database id (source: https://jessehouwing.net/create-github-issue-hierarchy-using-the-api/)
+            # get issue database id (--jq '.id' gives you the node-id)
+            # source: https://jessehouwing.net/create-github-issue-hierarchy-using-the-api/
             CHILD_ID=$(gh api /repos/${{ github.repository }}/issues/$CHILD_NUM --jq .id)
 
             # add child to epic
