@@ -41,8 +41,8 @@ jobs:
         run: |
           TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
           TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)
-          echo $TITLE
-          echo $TYPE
+          echo $TITLE >> $GITHUB_ENV
+          echo $TYPE >> $GITHUB_ENV
 
       - name: Get add subissue api
         run: |
@@ -50,7 +50,7 @@ jobs:
           echo "ADD_SUBISSUE_API2=${{ github.event.issue.url }}/sub_issues" >> $GITHUB_ENV
 
       - name: Create issue from file
-        run: echo "CHILD=$(gh issue create --title "Autocreated subissue with type task" --body-file ".github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}/test.md")" >> $GITHUB_ENV 
+        run: echo "CHILD=$(gh issue create --title $TITLE --body-file ".github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}/test.md")" >> $GITHUB_ENV 
       
       - name: Get child issue Number
         run: echo "CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')" >> $GITHUB_ENV
@@ -63,4 +63,4 @@ jobs:
         run: gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
 
       - name: Set subissue type to Task
-        run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type=Task
+        run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type=$TYPE
