@@ -39,8 +39,9 @@ jobs:
 
       - name: get title and type
         run: |
-          echo "TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)" >> $GITHUB_ENV
+          declare -- TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
           echo "TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)" >> $GITHUB_ENV
+          echo "$TITLE" >> $GITHUB_ENV
 
       - name: Get add subissue api
         run: |
