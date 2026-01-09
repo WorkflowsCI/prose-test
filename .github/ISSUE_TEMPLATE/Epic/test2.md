@@ -1,6 +1,6 @@
 ---
 title: Another Thing
-type: Improvement
+type: Feature
 ---
 
 do stuff better
