@@ -63,4 +63,4 @@ jobs:
         run: gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
 
       - name: Set subissue type to Task
-        run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type=$TYPE
+        run: gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type="$TYPE"
