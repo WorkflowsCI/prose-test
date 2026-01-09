@@ -39,7 +39,8 @@ jobs:
 
       - name: get the first line
         run: |
-          awk -v var="title:" 'NR==2 {print substr($0, 0)}' .github/ISSUE_TEMPLATE/Epic/test.md
+          TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
+          echo TITLE
 
       - name: Get add subissue api
         run: |
