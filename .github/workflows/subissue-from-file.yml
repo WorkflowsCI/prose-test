@@ -32,6 +32,12 @@ jobs:
         run: |
           for i in $MY_FILELIST; do
             echo "Hello ${i}"
+            source <(cat << EOF
+              $( sed -n '1,/---/p'  ${i} | sed '1d;$d' )
+            EOF)
+
+            echo " *title*: [ ${title} ]"
+            echo " *type*: [ ${type} ]"
           done  
 
       - name: Checkout repo
