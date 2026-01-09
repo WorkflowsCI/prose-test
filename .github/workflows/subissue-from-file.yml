@@ -39,8 +39,8 @@ jobs:
 
       - name: get title and type
         run: |
-          declare -- TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
-          declare -- TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)
+          TITLE=$(awk 'NR==2 {print substr($0, 8)}' .github/ISSUE_TEMPLATE/Epic/test.md)
+          TYPE=$(awk 'NR==3 {print substr($0, 7)}' .github/ISSUE_TEMPLATE/Epic/test.md)
           echo "TITLE=$TITLE" >> $GITHUB_ENV
           echo "TYPE=$TYPE" >> $GITHUB_ENV
 
@@ -50,7 +50,7 @@ jobs:
           echo "ADD_SUBISSUE_API2=${{ github.event.issue.url }}/sub_issues" >> $GITHUB_ENV
 
       - name: Create issue from file
-        run: echo "CHILD=$(gh issue create --title $TITLE --body-file ".github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}/test.md")" >> $GITHUB_ENV 
+        run: echo "CHILD=$(gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/${{ github.event.issue.type.name }}/test.md")" >> $GITHUB_ENV 
       
       - name: Get child issue Number
         run: echo "CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')" >> $GITHUB_ENV
