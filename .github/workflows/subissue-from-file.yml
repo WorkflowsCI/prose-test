@@ -31,14 +31,8 @@ jobs:
       - name: Do something with each file
         run: |
           for i in $MY_FILELIST; do
-            source <(cat << 'EOF'
-            $( sed -n '1,/---/p'  ${i} | sed '1d;$d' )
-            EOF
-            )
-
-            echo " *title*: [ ${title} ]"
-            echo " *type*: [ ${type} ]"
             echo "Hello ${i}"
+            awk -v var="title:" 'NR==2 {print NR}' ${i}
           done  
 
       - name: Checkout repo
