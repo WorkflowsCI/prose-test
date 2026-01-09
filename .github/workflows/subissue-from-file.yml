@@ -34,12 +34,12 @@ jobs:
             echo "Hello ${i}"
           done  
 
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
       - name: get the first line
         run: |
           awk 'NR==1 {print; exit}' .github/ISSUE_TEMPLATE/Epic/test.md
-
-      - name: Checkout repo
-        uses: actions/checkout@v3
 
       - name: Get add subissue api
         run: |
