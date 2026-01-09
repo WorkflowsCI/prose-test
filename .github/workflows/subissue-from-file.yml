@@ -24,7 +24,7 @@ jobs:
         run:  | 
           {
             echo 'MY_FILELIST<<EOF'
-            gh api --jq '.[].name' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
+            gh api --jq '.[].html_url' /repos/WorkflowsCI/prose-test/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
             echo EOF
           } >> "$GITHUB_ENV"
 
