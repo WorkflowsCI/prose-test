@@ -34,9 +34,9 @@ jobs:
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
           for file in $MY_FILELIST; do
-            # get title and type from frontmatter
-            TITLE=$(awk 'NR==2 {print substr($0, 8)}' $SUBISSUE_DIR/${file} )
-            TYPE=$(awk 'NR==3 {print substr($0, 7)}' $SUBISSUE_DIR/${file} )
+            # get title and type from end of file
+            TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
+            TYPE=$(tail -n 1 $SUBISSUE_DIR/${file} | awk '{print substr($0, 7)}')
 
             # create issue and get issue number
             CHILD=$(gh issue create --title "$TITLE" --body-file "$SUBISSUE_DIR/${file}")
