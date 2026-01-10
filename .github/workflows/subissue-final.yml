@@ -34,10 +34,15 @@ jobs:
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
           for file in $MY_FILELIST; do
-            # get title and type from end of file
-            # (old version) TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
-            TITLE=${file}
+            # set title to file name and remove file extension 
+            TITLE=${file%%.*}
+            # replace hyphens with spaces
             TITLE="${TITLE//-/ }"
+
+            # old version - looked for title in second to last line of .md file 
+            # TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
+
+            # get type from end of file
             TYPE=$(tail -n 1 $SUBISSUE_DIR/${file} | awk '{print substr($0, 7)}')
 
             # create issue and get issue number
