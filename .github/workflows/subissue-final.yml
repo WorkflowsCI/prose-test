@@ -35,7 +35,8 @@ jobs:
         run: |
           for file in $MY_FILELIST; do
             # get title and type from end of file
-            TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
+            # (old version) TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
+            TITLE="${${file}//-/ }"
             TYPE=$(tail -n 1 $SUBISSUE_DIR/${file} | awk '{print substr($0, 7)}')
 
             # create issue and get issue number
