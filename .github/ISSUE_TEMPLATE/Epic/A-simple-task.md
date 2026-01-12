@@ -9,27 +9,22 @@ It’s important to consider the design implications for not only different disa
 - [ ] Can any Drag and Drop functionality also be achieved through a simple mouse click?
 - [ ] For any time based events or dynamic interactive content, can the timing be adjusted or (ideally) disabled?
 
+#### Sighted person using voice control
+- [ ] Do all interactive elements have visible text labels?
+
+#### Visually impaired person using screen magnification
+
+- [ ] How does the content reflow in landscape orientation for Desktop at 200%? At 400%?
+- [ ] How does the content reflow in landscape orientation for Mobile at 200%? At 400%?
+- [ ] How does the content reflow in portrait orientation for Mobile at 200%? At 400%?
+
 #### Visually impaired person using a screen reader
 
 - [ ] If all images/videos/icons/colors were removed, does the design still make sense?
 - [ ] Which images/videos/icons/visual content cannot be removed and will require text alternatives?
-
-#### Sighted person using voice control
-- [ ] Do all interactive elements have visible text labels?
 
 #### Deaf person using a keyboard
 
 - [ ] Is there content that contains audio? If yes, are there viewable text-based alternatives?
 - [ ] Are there collections of repeating content we can add skip links too?
 - [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where the path of the focus indicator needs planning?
-
-#### Visually impaired person using screen magnification
-
-- [ ] How does the content reflow in landscape orientation for Desktop at 200%? At 400%?
-- [ ] How does the content reflow in landscape orientation for Mobile at 200%? At 400%?
-- [ ] How does the content reflow in portrait orientation for Desktop at 200%? At 400%?
-- [ ] How does the content reflow in portrait orientation for Mobile at 200%? At 400%?
-
----
-title: A Simple Task
-type: Task
