@@ -1,6 +1,8 @@
 This issue should be discussed after the initial drafts for necessary designs. It can also be reopened as needed.
 
-It’s important to consider the design implications for not only different disabilities, but also different types of assistive technology. The design should be able to either adapt to the different needs, or offer an equivalent alternative (think captions for videos or transcripts for podcasts). Discuss the following scenarios, consider which points apply, and then evaluate whether the design successfully addresses the relevant criteria.
+It’s important to consider the design implications for not only different disabilities, but also different types of assistive technology. The design should be able to either adapt to the different needs, or offer an equivalent alternative (think captions for videos or transcripts for podcasts). Look through the following scenarios, consider which points apply, and then evaluate with your team whether the design successfully addresses each one.  
+
+Keep this ticket open until all design iterations are finished, there are no outstanding questions or concerns, and you are confident that the design can accommodate each of the scenarios and points, below.
 
 ## Scenarios
 
@@ -29,4 +31,4 @@ It’s important to consider the design implications for not only different disa
 - [ ] Is there content that contains audio? If yes, are there viewable text-based alternatives?
 - [ ] Are there collections of repeating content we can add skip links too?
 - [ ] Is there content revealed only on hover? Can it be displayed another way? Or is there an existing pattern that shows how to access it with a keyboard?
-- [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where the path of the focus indicator needs planning?
+- [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where we might need to plan the path of the focus indicator?
