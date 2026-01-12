@@ -7,7 +7,7 @@ It’s important to consider the design implications for not only different disa
 #### Sighted person using a mouth stick
 
 - [ ] Can any Drag and Drop functionality also be achieved through a simple mouse click?
-- [ ] For any time based events or dynamic interactive content, can the timing be adjusted or (ideally) disabled?
+- [ ] For any time based events, animations or dynamic interactive content, can the timing be adjusted or (ideally) disabled?
 
 #### Sighted person using voice control
 
@@ -28,4 +28,5 @@ It’s important to consider the design implications for not only different disa
 
 - [ ] Is there content that contains audio? If yes, are there viewable text-based alternatives?
 - [ ] Are there collections of repeating content we can add skip links too?
+- [ ] Is there content revealed only on hover? Can it be displayed another way? Or is there an existing pattern that shows how to access it with a keyboard?
 - [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where the path of the focus indicator needs planning?
