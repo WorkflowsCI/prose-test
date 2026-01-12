@@ -10,13 +10,14 @@ It’s important to consider the design implications for not only different disa
 - [ ] For any time based events or dynamic interactive content, can the timing be adjusted or (ideally) disabled?
 
 #### Sighted person using voice control
+
 - [ ] Do all interactive elements have visible text labels?
 
 #### Visually impaired person using screen magnification
 
-- [ ] How does the content reflow in landscape orientation for Desktop at 200%? At 400%?
-- [ ] How does the content reflow in landscape orientation for Mobile at 200%? At 400%?
-- [ ] How does the content reflow in portrait orientation for Mobile at 200%? At 400%?
+- [ ] How does the page look in portrait orientation for Mobile at 320px wide?
+- [ ] Are there any components that would require horizontal scrolling at this width? Are there any alternatives?
+
 
 #### Visually impaired person using a screen reader
 
