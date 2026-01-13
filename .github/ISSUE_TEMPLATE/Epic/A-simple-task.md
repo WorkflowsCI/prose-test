@@ -9,26 +9,27 @@ Keep this ticket open until all design iterations are finished, there are no out
 #### Sighted person using a mouth stick
 
 - [ ] Can any Drag and Drop functionality also be achieved through a simple mouse click?
-- [ ] For any time based events, animations or dynamic interactive content, can the timing be adjusted or (ideally) disabled?
+- [ ] For any time based events, are there controls to either adjust the timing or (ideally) disable it?
 
 #### Sighted person using voice control
 
 - [ ] Do all interactive elements have visible text labels?
 
+#### Sighted person with ADHD using a screen reader
+
+- [ ] If all images/videos/animations/icons/colors were removed, does the design still make sense? 
+- [ ] What visual content cannot be removed and will require text alternatives?
+- [ ] Do animations and dynamic interactive content include controls to pause, stop or hide them?
+
 #### Visually impaired person using screen magnification
 
-- [ ] How does the page look in portrait orientation for Mobile at 320px wide?
-- [ ] Are there any components that would require horizontal scrolling at this width? Are there any alternatives?
-
-
-#### Visually impaired person using a screen reader
-
-- [ ] If all images/videos/icons/colors were removed, does the design still make sense?
-- [ ] Which images/videos/icons/visual content cannot be removed and will require text alternatives?
+- [ ] How does the page look at `1280 x 768px` and zoomed to `400%`?
+- [ ] Are there any modals, dialogs, overlays or notifications? If so, how do they look at this magnification?
+- [ ] Are there any components that would require horizontal scrolling? Are there any alternatives?
 
 #### Deaf person using a keyboard
 
 - [ ] Is there content that contains audio? If yes, are there viewable text-based alternatives?
-- [ ] Are there collections of repeating content we can add skip links too?
+- [ ] Are there collections of repeating content we can add skip links to?
 - [ ] Is there content revealed only on hover? Can it be displayed another way? Or is there an existing pattern that shows how to access it with a keyboard?
-- [ ] Are there any pop-ups, overlays, or notifications that will impact the user workflow, and where we might need to plan the path of the focus indicator?
+- [ ] Are there any components that use gesture or motion based interactions? If so, what are the equivalent methods to achieve the same interactions with a keyboard? 
