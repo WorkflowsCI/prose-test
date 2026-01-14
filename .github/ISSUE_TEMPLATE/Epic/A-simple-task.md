@@ -23,7 +23,7 @@ Keep this ticket open until all design iterations are finished, there are no out
 
 #### Visually impaired person using screen magnification
 
-- [ ] How does the page look at `1280 x 768px` and zoomed to `400%`?
+- [ ] How does the page look at a viewport width of `320px`?
 - [ ] Are there any modals, dialogs, overlays or notifications? If so, how do they look at this magnification?
 - [ ] Are there any components that would require horizontal scrolling? Are there any alternatives?
 
