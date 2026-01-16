@@ -25,7 +25,7 @@ Keep this ticket open until all design iterations are finished, there are no out
 
 - [ ] How does the page look at a viewport width of `320px`? [SC 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow)
 - [ ] Are there any modals, dialogs, overlays or notifications? How do they look look at a viewport width of `320px` and or with the text scaled 200%? [SC 1.4.4](https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html)
-- [ ] Are there any components that would require horizontal scrolling? Are there any alternatives?
+- [ ] Are there any components that would require horizontal scrolling? Are there any alternatives? [SC 1.4.10](https://www.w3.org/WAI/WCAG22/Understanding/reflow)
 
 #### Deaf person using a keyboard
 
