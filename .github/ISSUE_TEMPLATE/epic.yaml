@@ -17,9 +17,9 @@ body:
       id: accessibility
       attributes:
         label: Accessibility
-        description: What frontend work (if any) will this Epic require?
+        description: What frontend work (if any) will this Epic include?
         options:
-          - 'Requires a brand new UI'
+          - 'Includes a brand new UI'
           - 'Requires frontend work in the Storefront or outside the Admin'
           - 'Requires frontend work -only- in the Admin'
           - 'Backend-only work required'
