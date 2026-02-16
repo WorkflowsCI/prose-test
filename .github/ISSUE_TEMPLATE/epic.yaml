@@ -17,10 +17,12 @@ body:
       id: accessibility
       attributes:
         label: Accessibility
-        description: Will this Epic require frontend work in the Storefront, a brand new UI, or build upon any UI outside the Admin?
+        description: What frontend work (if any) will this Epic require?
         options:
-          - 'Yes'
-          - 'No'
+          - 'Requires a brand new UI'
+          - 'Requires frontend work in the Storefront or outside the Admin'
+          - 'Requires frontend work -only- in the Admin'
+          - 'Backend-only work required'
         default: 0
       validations:
         required: true
