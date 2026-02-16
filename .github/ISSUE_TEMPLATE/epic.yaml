@@ -14,13 +14,13 @@ body:
         options:
           - label: This will definitely be cool
     - type: dropdown
-      id: version
+      id: accessibility
       attributes:
-        label: Version
-        description: What version of our software are you running?
+        label: Accessibility
+        description: Will this Epic require frontend work in the Storefront, a brand new UI, or build upon any UI outside the Admin?
         options:
-          - 1.0.2 (Default)
-          - 1.0.3 (Edge)
+          - Yes
+          - No
         default: 0
       validations:
         required: true
