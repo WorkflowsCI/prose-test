@@ -13,3 +13,14 @@ body:
         description: Please use this checklist to indicate standards.
         options:
           - label: This will definitely be cool
+    - type: dropdown
+      id: version
+      attributes:
+         label: accessibility
+         description: Will this Epic require frontend work in the Storefront, a brand new UI, or build upon any UI outside the Admin?
+         options:
+            - Yes
+            - No
+         default: 0
+       validations:
+         required: true
