@@ -8,23 +8,53 @@ permissions:
   issues: write
 
 jobs:
-  create-subissues:
+  frontend-work:
     runs-on: ubuntu-latest
     if: github.event.issue.type.name == 'Epic'
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    outputs:
+        type: ${{ steps.frontend_work.outputs.type }}
     steps:
+      - name: Check what frontend work (if any) is required
+        id: frontend_work
+        run: echo "type=$(tail -n 1 github.event.issue.body" >> "$GITHUB_OUTPUT"
+
+  subissues-tests:
+      runs-on: ubuntu-latest
+      needs: frontend-work
+      if: needs.frontend-work.outputs.type != 'Backend-only work required' && needs.frontend-work.outputs.type != 'Requires frontend work -only- in the Admin'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      steps:
+      - name: Make a list of all markdown files from correct subdirectory
+        env:
+          DIRECTORY: steps.get_directory.outputs.dir
+        run: | 
+          {
+            echo 'MY_FILELIST<<EOF'
+            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
+            echo EOF
+          } >> "$GITHUB_ENV"
+        
+  subissues-design:
+      runs-on: ubuntu-latest
+      needs: frontend-work
+      if: needs.frontend-work.outputs.type != 'Backend-only work required'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
 
       - name: Save directory of subissues
-        run: echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic" >> $GITHUB_ENV
+        run: echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design" >> $GITHUB_OUTPUT
       
-      - name: Make a list of all markdown files in correct subdirectory
+      - name: Make or add to list of all markdown files from correct subdirectory
         run: | 
           {
             echo 'MY_FILELIST<<EOF'
-            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/$SUBISSUE_DIR | grep '.md'
+            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Design | grep '.md'
             echo EOF
           } >> "$GITHUB_ENV"
 
@@ -39,14 +69,8 @@ jobs:
             # replace hyphens with spaces
             TITLE="${TITLE//-/ }"
 
-            # old version - looked for title in second to last line of .md file 
-            # TITLE=$(tail -n 2 $SUBISSUE_DIR/${file} | head -n 1 | awk '{print substr($0, 8)}')
-
-            # get type from end of file (commented out as it is currently hardcoded)
-            # TYPE=$(tail -n 1 $SUBISSUE_DIR/${file} | awk '{print substr($0, 7)}')
-
             # create issue and get issue number
-            CHILD=$(gh issue create --title "$TITLE" --body-file "$SUBISSUE_DIR/${file}")
+            CHILD=$(gh issue create --title "$TITLE" --body-file "${file}")
             CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')
 
             # get issue database id
@@ -57,8 +81,5 @@ jobs:
             gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
 
             # set issue type
-            gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type="Task"
-
-            # old version
-            # gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type="$TYPE"          
+            gh api -X PATCH /repos/${{ github.repository }}/issues/$CHILD_NUM --field type="Task" 
           done  
