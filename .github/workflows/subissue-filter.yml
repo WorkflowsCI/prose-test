@@ -14,16 +14,34 @@ jobs:
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-        type: ${{ steps.frontend_work.outputs.type }}
+        backend_only: ${{ steps.check_backend.outputs.backend_only }}
+        admin_only: ${{ steps.check_admin.outputs.admin_only }}
+        
     steps:
-      - name: Check what frontend work (if any) is required
-        id: frontend_work
-        run: echo "type=$(tail -n 1 ${{ github.event.issue.body }} | awk '{print $0}')" >> "$GITHUB_OUTPUT"
+      - name: Check if epic is backend-only
+        id: check_backend
+        run: |
+          if (${{ github.event.issue.body }} | grep 'Backend-only')
+          then
+            echo "backend_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "backend_only=false" >> "$GITHUB_OUTPUT"
+          fi
+        
+      - name: Check if epic is admin-only
+        id: check_admin
+        run: |
+          if (${{ github.event.issue.body }} | grep '-only- in the Admin')
+          then
+            echo "admin_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "admin_only=false" >> "$GITHUB_OUTPUT"
+          fi
 
   subissues-tests:
       runs-on: ubuntu-latest
       needs: frontend-work
-      if: needs.frontend-work.outputs.type != 'Backend-only work required' && needs.frontend-work.outputs.type != 'Requires frontend work -only- in the Admin'
+      if: needs.frontend-work.outputs.backend_only != 'true' && needs.frontend-work.outputs.admin_only != 'true'
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       steps:
@@ -40,7 +58,7 @@ jobs:
   subissues-design:
       runs-on: ubuntu-latest
       needs: frontend-work
-      if: needs.frontend-work.outputs.type != 'Backend-only work required'
+      if: needs.frontend-work.outputs.backend_only != 'true'
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       steps:
