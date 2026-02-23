@@ -1,4 +1,4 @@
-name: Create subissues for Epic issues
+name: Conditional subissues for Epic issues
 
 on:
   issues:
@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Check what frontend work (if any) is required
         id: frontend_work
-        run: echo "type=$(tail ${{ github.event.issue.body }}" >> "$GITHUB_OUTPUT"
+        run: echo "type=$(tail ${{ github.event.issue.body }} | awk 'END{print}')" >> "$GITHUB_OUTPUT"
 
   subissues-tests:
       runs-on: ubuntu-latest
