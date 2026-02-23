@@ -21,7 +21,7 @@ jobs:
       - name: Check if epic is backend-only
         id: backend
         run: |
-          echo backend_only= "$( echo ${{ github.event.issue.body }} | grep -q Backend-only )" >> "$GITHUB_ENV"
+          echo "backend_only=$( echo ${{ github.event.issue.body }} | grep -q Backend-only )" >> "$GITHUB_ENV"
         
       - name: Check if epic is admin-only
         id: admin
