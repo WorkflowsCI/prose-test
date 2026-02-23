@@ -6,9 +6,6 @@ on:
 
 permissions:
   issues: write
-
-env:
-  EPIC_ISSUE: ${{ github.event.issue.body }}
   
 jobs:
   frontend-work:
@@ -17,21 +14,20 @@ jobs:
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-        backend_only: ${{ steps.backend.outputs.backend_only }}
+        backend_only: ${{ steps.backend.outputs.test }}
         admin_only: ${{ steps.admin.outputs.admin_only }}
         
     steps:
       - name: Check if epic is backend-only
         id: backend
         run: |
-          if grep "Backend-only" $EPIC_ISSUE; then
-            echo "backend_only=true">> "$GITHUB_ENV"
-          fi
+          echo "test=$( github.event.issue.body | grep "Backend-only" )" >> $GITHUB_ENV
+          
         
       - name: Check if epic is admin-only
         id: admin
         run: |
-          if grep "-only- in the Admin" $EPIC_ISSUE; then
+          if grep "only- in the Admin" github.event.issue.body; then
             echo "admin_only=true">> "$GITHUB_ENV"
           fi
 
