@@ -14,12 +14,12 @@ jobs:
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     outputs:
-        backend_only: ${{ steps.check_backend.outputs.backend_only }}
-        admin_only: ${{ steps.check_admin.outputs.admin_only }}
+        backend_only: ${{ steps.backend.outputs.backend_only }}
+        admin_only: ${{ steps.admin.outputs.admin_only }}
         
     steps:
       - name: Check if epic is backend-only
-        id: check_backend
+        id: backend
         run: |
           if (grep -q 'Backend-only' ${{ github.event.issue.body }})
           then
@@ -29,7 +29,7 @@ jobs:
           fi
         
       - name: Check if epic is admin-only
-        id: check_admin
+        id: admin
         run: |
           if (grep -q '-only- in the Admin' ${{ github.event.issue.body }})
           then
