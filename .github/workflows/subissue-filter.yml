@@ -20,23 +20,11 @@ jobs:
     steps:
       - name: Check if epic is backend-only
         id: backend
-        run: |
-          if [[ grep -q 'Backend-only' ${{ github.event.issue.body }} ]]
-          then
-            echo "backend_only=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "backend_only=false" >> "$GITHUB_OUTPUT"
-          fi
+        run: echo "backend_only=$(github.event.issue.body | grep -q 'Backend-only')"  >> "$GITHUB_OUTPUT"
         
       - name: Check if epic is admin-only
         id: admin
-        run: |
-          if [[ grep -q '-only- in the Admin' ${{ github.event.issue.body }} ]]
-          then
-            echo "admin_only=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "admin_only=false" >> "$GITHUB_OUTPUT"
-          fi
+        run: echo "admin_only=$(github.event.issue.body | grep -q '-only- in the Admin')"  >> "$GITHUB_OUTPUT"
 
   subissues-tests:
       runs-on: ubuntu-latest
