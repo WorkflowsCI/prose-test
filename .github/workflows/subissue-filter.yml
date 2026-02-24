@@ -43,7 +43,7 @@ jobs:
             # check which directory
             SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic
             
-            if file -eq "Design-Scenarios.md"; then
+            if [[ "$file" == "Design-Scenarios.md" ]]; then
               SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design
             fi
         
