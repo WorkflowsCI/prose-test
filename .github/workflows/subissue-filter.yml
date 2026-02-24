@@ -16,9 +16,6 @@ jobs:
       steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
-
-      - name: Save directory of subissues
-        run: echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design" >> $GITHUB_OUTPUT
       
       - name: Create list of all markdown files from Epic
         if: ! contains(github.event.issue.body, '-only- in the Admin') 
@@ -43,13 +40,20 @@ jobs:
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
           for file in $MY_FILELIST; do
+            # check which directory
+            SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic
+            
+            if file -eq "Design-Scenarios.md" then
+              SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design
+            fi
+        
             # set title to file name and remove file extension 
             TITLE=${file%%.*}
             # replace hyphens with spaces
             TITLE="${TITLE//-/ }"
 
             # create issue and get issue number
-            CHILD=$(gh issue create --title "$TITLE" --body-file "${file}")
+            CHILD=$(gh issue create --title "$TITLE" --body-file "$SUBISSUE_DIR/${file}")
             CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')
 
             # get issue database id
