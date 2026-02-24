@@ -12,25 +12,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: github.event.issue.type.name =='Epic' && ! contains(github.event.issue.body, 'Backend-only') && ! contains(github.event.issue.body, 'only- in the Admin')
-      steps:
-      - name: Make a list of all markdown files from correct subdirectory
-        env:
-          DIRECTORY: steps.get_directory.outputs.dir
-        run: | 
-          {
-            echo 'MY_FILELIST<<EOF'
-            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
-            echo EOF
-          } >> "$GITHUB_ENV"
-        
-  subissues-design:
-      runs-on: ubuntu-latest
-      needs: subissues-tests
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_BODY: ${{ github.event.issue.body }}
-      if: ! contains('$ISSUE_BODY', 'Backend-only')
+      if: github.event.issue.type.name =='Epic' && ! contains(github.event.issue.body, 'Backend-only') 
       steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
@@ -38,7 +20,16 @@ jobs:
       - name: Save directory of subissues
         run: echo "SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design" >> $GITHUB_OUTPUT
       
-      - name: Make or add to list of all markdown files from correct subdirectory
+      - name: Create list of all markdown files from Epic
+        if: ! contains(github.event.issue.body, '-only- in the Admin') 
+        run: | 
+          {
+            echo 'MY_FILELIST<<EOF'
+            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
+            echo EOF
+          } >> "$GITHUB_ENV"
+
+      - name: Create list of all markdown files from Design
         run: | 
           {
             echo 'MY_FILELIST<<EOF'
