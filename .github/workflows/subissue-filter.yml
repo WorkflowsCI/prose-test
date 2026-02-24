@@ -8,43 +8,12 @@ permissions:
   issues: write
   
 jobs:
-  frontend-work:
-    runs-on: ubuntu-latest
-    if: github.event.issue.type.name == 'Epic'
-    env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_BODY: ${{ github.event.issue.body }}
-    outputs:
-        backend_only: ${{ steps.backend.outputs.backend_only }}
-        admin_only: ${{ steps.admin.outputs.admin_only }}
-        
-    steps:
-      - name: Check if epic is backend-only
-        id: backend
-        run: |
-          match=$( "$ISSUE_BODY" | grep -c "Backend-only" )
-          if match > 0 ; then
-            echo "backend_only=true" >> $GITHUB_ENV
-          else
-            echo "backend_only=false" >> $GITHUB_ENV
-          fi
-        
-      - name: Check if epic is admin-only
-        id: admin
-        run: |
-          echo "match=$($ISSUE_BODY" | grep -c "only- in the Admin")"
-          if match > 0; then
-            echo "admin_only=true">> "$GITHUB_ENV"
-          else
-            echo "admin_only=false">> "$GITHUB_ENV"
-          fi
-
   subissues-tests:
       runs-on: ubuntu-latest
-      needs: frontend-work
-      if: ${{ needs.frontend-work.outputs.backend_only != 'true' && needs.frontend-work.outputs.admin_only != 'true' }}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE_BODY: ${{ github.event.issue.body }}
+      if: github.event.issue.type.name =='Epic' && ! contains('$ISSUE_BODY', 'Backend-only') && ! contains('$ISSUE_BODY', 'only- in the Admin')
       steps:
       - name: Make a list of all markdown files from correct subdirectory
         env:
@@ -58,10 +27,10 @@ jobs:
         
   subissues-design:
       runs-on: ubuntu-latest
-      needs: frontend-work
-      if: ${{ needs.frontend-work.outputs.backend_only != 'true' }}
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE_BODY: ${{ github.event.issue.body }}
+      if: github.event.issue.type.name =='Epic' && ! contains('$ISSUE_BODY', 'Backend-only')
       steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
