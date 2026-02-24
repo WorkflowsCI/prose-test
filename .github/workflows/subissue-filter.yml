@@ -13,7 +13,7 @@ jobs:
     if: github.event.issue.type.name == 'Epic'
     env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_BODY: "${{ github.event.issue.body }}"
+        ISSUE_BODY: ${{ github.event.issue.body }}
     outputs:
         backend_only: ${{ steps.backend.outputs.backend_only }}
         admin_only: ${{ steps.admin.outputs.admin_only }}
@@ -22,7 +22,7 @@ jobs:
       - name: Check if epic is backend-only
         id: backend
         run: |
-          match="$( $ISSUE_BODY | grep -c "Backend-only" )"
+          match=echo "$ISSUE_BODY" | grep -c "Backend-only"
           if match > 0 ; then
             echo "backend_only=true" >> $GITHUB_ENV
           else
@@ -32,7 +32,7 @@ jobs:
       - name: Check if epic is admin-only
         id: admin
         run: |
-          match="$( $ISSUE_BODY | grep -c "only- in the Admin")"
+          match=echo "$ISSUE_BODY" | grep -c "only- in the Admin"
           if match > 0; then
             echo "admin_only=true">> "$GITHUB_ENV"
           else
