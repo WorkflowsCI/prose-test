@@ -32,7 +32,7 @@ jobs:
       - name: Check if epic is admin-only
         id: admin
         run: |
-          echo "match=$($ISSUE_BODY" | grep -c "only- in the Admin"
+          echo "match=$($ISSUE_BODY" | grep -c "only- in the Admin")"
           if match > 0; then
             echo "admin_only=true">> "$GITHUB_ENV"
           else
