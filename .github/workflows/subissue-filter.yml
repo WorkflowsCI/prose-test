@@ -19,28 +19,31 @@ jobs:
 
       - name: Create list of all markdown files from Design
         run: | 
+          FILES=$(gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Design | grep '.md')
           {
-            echo 'MY_FILELIST<<EOF'
-            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Design | grep '.md'
-            echo EOF
+            echo "MY_FILELIST_ACC<<EOF"
+            echo "${MY_FILELIST_ACC}"
+            echo "${FILES}"
+            echo "EOF"
           } >> "$GITHUB_ENV"
       
       - name: Create list of all markdown files from Epic
         if: ! contains(github.event.issue.body, 'Requires frontend work -only- in the Admin') 
         run: | 
+          FILES=$(gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
           {
-            echo 'MY_FILELIST+=<<EOF'
-            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
-            echo EOF
+            echo "MY_FILELIST_ACC<<EOF"
+            echo "${MY_FILELIST_ACC}"
+            echo "${FILES}"
+            echo "EOF"
           } >> "$GITHUB_ENV"
-
 
       - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
-          for file in $MY_FILELIST; do
+          for file in $MY_FILELIST_ACC; do
             # check which directory
             
             if [[ "$file" == "Design-Scenarios.md" ]]; then
