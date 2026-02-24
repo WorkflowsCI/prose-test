@@ -8,12 +8,18 @@ permissions:
   issues: write
   
 jobs:
+  frontend-required:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    if: github.event.issue.type.name =='Epic'
+    
   subissues-tests:
       runs-on: ubuntu-latest
+      needs: frontend-required
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        ISSUE_BODY: ${{ github.event.issue.body }}
-      if: github.event.issue.type.name =='Epic' && ! contains('$ISSUE_BODY', 'Backend-only') && ! contains('$ISSUE_BODY', 'only- in the Admin')
+      if: ! contains(github.event.issue.body, 'Backend-only') && ! contains(github.event.issue.body, 'only- in the Admin')
       steps:
       - name: Make a list of all markdown files from correct subdirectory
         env:
@@ -27,10 +33,11 @@ jobs:
         
   subissues-design:
       runs-on: ubuntu-latest
+      needs: subissues-tests
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         ISSUE_BODY: ${{ github.event.issue.body }}
-      if: github.event.issue.type.name =='Epic' && ! contains('$ISSUE_BODY', 'Backend-only')
+      if: ! contains('$ISSUE_BODY', 'Backend-only')
       steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
