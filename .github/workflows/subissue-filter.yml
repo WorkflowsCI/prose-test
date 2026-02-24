@@ -22,7 +22,7 @@ jobs:
       - name: Check if epic is backend-only
         id: backend
         run: |
-          match=echo "$ISSUE_BODY" | grep -c "Backend-only"
+          echo "match=$($ISSUE_BODY" | grep -c "Backend-only")"
           if match > 0 ; then
             echo "backend_only=true" >> $GITHUB_ENV
           else
@@ -32,7 +32,7 @@ jobs:
       - name: Check if epic is admin-only
         id: admin
         run: |
-          match=echo "$ISSUE_BODY" | grep -c "only- in the Admin"
+          echo "match=$($ISSUE_BODY" | grep -c "only- in the Admin"
           if match > 0; then
             echo "admin_only=true">> "$GITHUB_ENV"
           else
