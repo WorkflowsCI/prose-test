@@ -16,15 +16,6 @@ jobs:
       steps:
       - name: Define api call to add subissues
         run: echo "ADD_SUBISSUE_API=/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/sub_issues" >> $GITHUB_ENV
-      
-      - name: Create list of all markdown files from Epic
-        if: ! contains(github.event.issue.body, 'Requires frontend work -only- in the Admin') 
-        run: | 
-          {
-            echo 'MY_FILELIST<<EOF'
-            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
-            echo EOF
-          } >> "$GITHUB_ENV"
 
       - name: Create list of all markdown files from Design
         run: | 
@@ -33,6 +24,16 @@ jobs:
             gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Design | grep '.md'
             echo EOF
           } >> "$GITHUB_ENV"
+      
+      - name: Create list of all markdown files from Epic
+        if: ! contains(github.event.issue.body, 'Requires frontend work -only- in the Admin') 
+        run: | 
+          {
+            echo 'MY_FILELIST+=<<EOF'
+            gh api --jq '.[].name' /repos/${{ github.repository }}/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md'
+            echo EOF
+          } >> "$GITHUB_ENV"
+
 
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -41,10 +42,11 @@ jobs:
         run: |
           for file in $MY_FILELIST; do
             # check which directory
-            SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic
             
             if [[ "$file" == "Design-Scenarios.md" ]]; then
               SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design
+            else
+              SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic
             fi
         
             # set title to file name and remove file extension 
