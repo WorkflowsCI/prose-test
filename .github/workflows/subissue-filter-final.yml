@@ -12,7 +12,6 @@ jobs:
       runs-on: ubuntu-latest
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        EPIC_NUM: ${{ github.event.issue.number }}
         REPO: ${{ github.repository }}
       if: github.event.issue.type.name =='Epic' && !contains(github.event.issue.body, 'Backend-only work required') 
       steps:
@@ -40,6 +39,8 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create issue for each markdown file and attach as subissue to newly created epic
+        env:
+          EPIC_NUM: ${{ github.event.issue.number }}
         run: |
           for file in $FILELIST; do
             # set title to file name and remove file extension 
