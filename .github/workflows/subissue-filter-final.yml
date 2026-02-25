@@ -55,7 +55,7 @@ jobs:
             fi
 
             # create subissue and get subissue number
-            SUBISSUE=$(gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/${file}")
+            SUBISSUE=$(gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/Epic/${file}")
             SUBISSUE_NUM=$(gh issue view $SUBISSUE --json number --jq '.number')
 
             # get subissue database id
