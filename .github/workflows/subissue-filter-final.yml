@@ -17,7 +17,7 @@ jobs:
       steps:
       - name: Create list of all markdown files from Design
         run: | 
-          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Design | grep '.md' | sed 's|^|Design/|' )
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic/Design | grep '.md' | sed 's|^|Design/|' )
           {
             echo "FILELIST<<EOF"
             echo "${FILES}"
@@ -27,7 +27,7 @@ jobs:
       - name: Create list of all markdown files from Epic
         if: "!contains( github.event.issue.body, 'Requires frontend work -only- in the Admin' )"
         run: | 
-          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md' | sed 's|^|Epic/|')
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic/Testing | grep '.md' | sed 's|^|Testing/|')
           {
             echo "FILELIST<<EOF"
             echo "${FILELIST}"
@@ -50,8 +50,8 @@ jobs:
             #remove directory name
             if [[ "$TITLE" == "Design/"* ]]; then
               TITLE="${TITLE#Design/}"
-            elif [[ "$TITLE" == "Epic/"* ]]; then
-              TITLE="${TITLE#Epic/}"
+            elif [[ "$TITLE" == "Testing/"* ]]; then
+              TITLE="${TITLE#Testing/}"
             fi
 
             # create subissue and get subissue number
