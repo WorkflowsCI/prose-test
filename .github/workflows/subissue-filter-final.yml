@@ -16,25 +16,22 @@ jobs:
         REPO: ${{ github.repository }}
       if: github.event.issue.type.name =='Epic' && !contains(github.event.issue.body, 'Backend-only work required') 
       steps:
-      - name: Define api call to add subissues
-        run: echo "ADD_SUBISSUE_API=/repos/$REPO/issues/$EPIC_NUM/sub_issues" >> $GITHUB_ENV
-
       - name: Create list of all markdown files from Design
         run: | 
           FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Design | grep '.md' | sed 's|^|Design/|' )
           {
-            echo "MY_FILELIST_ACC<<EOF"
+            echo "FILELIST<<EOF"
             echo "${FILES}"
             echo "EOF"
           } >> "$GITHUB_ENV"
       
       - name: Create list of all markdown files from Epic
-        if: "!contains(github.event.issue.body, 'Requires frontend work -only- in the Admin')"
+        if: "!contains( github.event.issue.body, 'Requires frontend work -only- in the Admin' )"
         run: | 
           FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md' | sed 's|^|Epic/|')
           {
-            echo "MY_FILELIST_ACC<<EOF"
-            echo "${MY_FILELIST_ACC}"
+            echo "FILELIST<<EOF"
+            echo "${FILELIST}"
             echo "${FILES}"
             echo "EOF"
           } >> "$GITHUB_ENV"
@@ -44,7 +41,7 @@ jobs:
 
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
-          for file in $MY_FILELIST_ACC; do
+          for file in $FILELIST; do
             # set title to file name and remove file extension 
             TITLE=${file%%.md}
             # replace hyphens with spaces
@@ -65,7 +62,7 @@ jobs:
             SUBISSUE_ID=$(gh api /repos/$REPO/issues/$SUBISSUE_NUM --jq .id)
 
             # add subissue to epic
-            gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$SUBISSUE_ID
+            gh api -X POST /repos/$REPO/issues/$EPIC_NUM/sub_issues -F sub_issue_id=$SUBISSUE_ID
 
             # set subissue type
             gh api -X PATCH /repos/$REPO/issues/$SUBISSUE_NUM --field type="Task" 
