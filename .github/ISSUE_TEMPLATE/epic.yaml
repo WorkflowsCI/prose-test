@@ -21,7 +21,7 @@ body:
         options:
           - 'Includes a brand new UI'
           - 'Requires frontend work in the Storefront or outside the Admin'
-          - 'Requires frontend work -only- in the Admin'
+          - 'Requires frontend work only in the Admin'
           - 'Backend-only work required'
         default: 0
       validations:
