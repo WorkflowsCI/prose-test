@@ -45,20 +45,16 @@ jobs:
       - name: Create issue for each markdown file and attach as subissue to newly created epic
         run: |
           for file in $MY_FILELIST_ACC; do
-        
             # set title to file name and remove file extension 
-            TITLE=${file%%.*}
+            TITLE=${file%%.md}
             # replace hyphens with spaces
             TITLE=${TITLE//-/ }
             #remove directory name
-            case $TITLE in 
-              "Design/")
-                TITLE=${TITLES#Design/}
-                ;;
-              "Epic/")
-                TITLE=${TITLES#Epic/}
-                ;;
-            esac
+            if [[ "$str" == "Design/"* ]]; then
+              TITLE="${TITLE#Design/}"
+            elif [[ "$str" == "Epic/"* ]]; then
+              TITLE="${TITLE#Epic/}"
+            fi
 
             # create subissue and get subissue number
             SUBISSUE=$(gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/${file}")
