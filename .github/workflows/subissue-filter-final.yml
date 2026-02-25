@@ -1,0 +1,73 @@
+name: Conditional subissues for Epic issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  
+jobs:
+  subissues-tests:
+      runs-on: ubuntu-latest
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PARENT_NUM: ${{ github.event.issue.number }}
+        REPO: ${{ github.repository }}
+      if: github.event.issue.type.name =='Epic' && !contains(github.event.issue.body, 'Backend-only work required') 
+      steps:
+      - name: Define api call to add subissues
+        run: echo "ADD_SUBISSUE_API=/repos/$REPO/issues/$PARENT_NUM/sub_issues" >> $GITHUB_ENV
+
+      - name: Create list of all markdown files from Design
+        run: | 
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Design | grep '.md')
+          {
+            echo "MY_FILELIST_ACC<<EOF"
+            echo "${FILES}"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+      
+      - name: Create list of all markdown files from Epic
+        if: "!contains(github.event.issue.body, 'Requires frontend work -only- in the Admin')"
+        run: | 
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
+          {
+            echo "MY_FILELIST_ACC<<EOF"
+            echo "${MY_FILELIST_ACC}"
+            echo "${FILES}"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Create issue for each markdown file and attach as subissue to newly created epic
+        run: |
+          for file in $MY_FILELIST_ACC; do
+            # check which directory
+            if [[ "$file" == "Design-Scenarios.md" ]]; then
+              SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Design
+            else
+              SUBISSUE_DIR=.github/ISSUE_TEMPLATE/Epic
+            fi
+        
+            # set title to file name and remove file extension 
+            TITLE=${file%%.*}
+            # replace hyphens with spaces
+            TITLE="${TITLE//-/ }"
+
+            # create issue and get issue number
+            CHILD=$(gh issue create --title "$TITLE" --body-file "$SUBISSUE_DIR/${file}")
+            CHILD_NUM=$(gh issue view $CHILD --json number --jq '.number')
+
+            # get issue database id
+            # source: https://jessehouwing.net/create-github-issue-hierarchy-using-the-api/
+            CHILD_ID=$(gh api /repos/$REPO/issues/$CHILD_NUM --jq .id)
+
+            # add child to epic
+            gh api -X POST $ADD_SUBISSUE_API -F sub_issue_id=$CHILD_ID
+
+            # set issue type
+            gh api -X PATCH /repos/$REPO/issues/$CHILD_NUM --field type="Task" 
+          done  
