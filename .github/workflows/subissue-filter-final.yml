@@ -21,8 +21,7 @@ jobs:
 
       - name: Create list of all markdown files from Design
         run: | 
-          DIR="Design/"
-          FILES+=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Design | grep '.md')
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Design | grep '.md' | sed 's|^|Design/|' )
           {
             echo "MY_FILELIST_ACC<<EOF"
             echo "${FILES}"
@@ -32,8 +31,7 @@ jobs:
       - name: Create list of all markdown files from Epic
         if: "!contains(github.event.issue.body, 'Requires frontend work -only- in the Admin')"
         run: | 
-          DIR="Epic/"
-          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md')
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic | grep '.md' | sed 's|^|Epic/|')
           {
             echo "MY_FILELIST_ACC<<EOF"
             echo "${MY_FILELIST_ACC}"
