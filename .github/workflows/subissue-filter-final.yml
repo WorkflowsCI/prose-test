@@ -50,9 +50,9 @@ jobs:
             # replace hyphens with spaces
             TITLE=${TITLE//-/ }
             #remove directory name
-            if [[ "$str" == "Design/"* ]]; then
+            if [[ "$TITLE" == "Design/"* ]]; then
               TITLE="${TITLE#Design/}"
-            elif [[ "$str" == "Epic/"* ]]; then
+            elif [[ "$TITLE" == "Epic/"* ]]; then
               TITLE="${TITLE#Epic/}"
             fi
 
