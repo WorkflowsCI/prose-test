@@ -49,7 +49,16 @@ jobs:
             # set title to file name and remove file extension 
             TITLE=${file%%.*}
             # replace hyphens with spaces
-            TITLE="${TITLE//-/ }"
+            TITLE=${TITLE//-/ }
+            #remove directory name
+            case $TITLE in 
+              "Design/")
+                TITLE=${TITLES#Design/}
+                ;;
+              "Epic/")
+                TITLE=${TITLES#Epic/}
+                ;;
+            esac
 
             # create subissue and get subissue number
             SUBISSUE=$(gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/${file}")
