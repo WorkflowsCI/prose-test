@@ -1,4 +1,4 @@
-name: Conditional subissues for Epic issues
+name: FINAL - Conditional subissues for Epic issues
 
 on:
   issues:
