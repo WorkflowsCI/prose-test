@@ -25,7 +25,7 @@ jobs:
           } >> "$GITHUB_ENV"
       
       - name: Create list of all markdown files from Epic
-        if: "!contains( github.event.issue.body, 'Requires frontend work only in the Admin' )"
+        if: ${{ !contains(github.event.issue.body, 'Requires frontend work only in the Admin') }}
         run: | 
           FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic/Testing | grep '.md' | sed 's|^|Testing/|')
           {
