@@ -1,0 +1,38 @@
+name: Create issues from .md files
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - trunk
+
+permissions:
+  issues: write
+
+on: workflow_dispatch
+
+jobs:
+  create-subissues:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create list of all markdown files from codex
+      run: | 
+        FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/Epic/codex | grep '.md' )
+        {
+          echo "FILELIST<<EOF"
+          echo "${FILES}"
+          echo "EOF"
+        } >> "$GITHUB_ENV"
+
+    steps:
+      - uses: actions/checkout@v3
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.html_url }}
+        run: |
+          for file in $FILELIST; do
+            # set title to file name and remove file extension 
+            TITLE=${file%%.md}
+            gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/Epic/${file}"
+          done 
