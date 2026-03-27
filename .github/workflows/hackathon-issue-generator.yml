@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ISSUE: ${{ github.event.issue.html_url }}
+      REPO: ${{ github.repository }}
 
     steps:
       - name: Create list of all markdown files from codex
         run: |
-          FILES=$(gh api --jq '.[].name' .github/ISSUE_TEMPLATE/codex | grep '.md' )
+          FILES=$(gh api --jq '.[].name' /repos/$REPO/contents/.github/ISSUE_TEMPLATE/codex | grep '.md' )
           {
             echo "FILELIST<<EOF"
             echo "${FILES}"
@@ -34,5 +34,5 @@ jobs:
           for file in $FILELIST; do
             # set title to file name and remove file extension 
             TITLE=${file%%.md}
-            gh issue create --title "$TITLE" --body-file ".github/ISSUE_TEMPLATE/codex/${file}"
+            gh issue create --title "$TITLE" --body-file "/repos/$REPO/contents/.github/ISSUE_TEMPLATE/codex/${file}"
           done
