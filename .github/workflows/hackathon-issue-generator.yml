@@ -32,7 +32,7 @@ jobs:
       - name: Create issue for each markdown file
         run: |
           for file in $FILELIST; do
-            # set title to file name and remove file extension 
-            TITLE=${file%%.md}
+            # set title to file name
+            TITLE=${file}
             gh issue create --title "$TITLE" --body-file "/repos/$REPO/contents/.github/ISSUE_TEMPLATE/codex/${file}"
           done
