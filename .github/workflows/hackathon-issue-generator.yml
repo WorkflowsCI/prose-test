@@ -12,6 +12,9 @@ permissions:
 jobs:
   create-subissues:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ISSUE: ${{ github.event.issue.html_url }}
 
     steps:
       - name: Create list of all markdown files from codex
@@ -25,9 +28,6 @@ jobs:
 
       - name: Checkout repo
         uses: actions/checkout@v3
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE: ${{ github.event.issue.html_url }}
 
       - name: Create issue for each markdown file
         run: |
