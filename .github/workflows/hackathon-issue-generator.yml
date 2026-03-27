@@ -1,4 +1,4 @@
-name: Create issues from .md files
+name: create hackathon issues
 
 on:
   workflow_dispatch:
