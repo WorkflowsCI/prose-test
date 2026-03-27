@@ -2,9 +2,6 @@ name: create hackathon issues
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - trunk
 
 permissions:
   issues: write
