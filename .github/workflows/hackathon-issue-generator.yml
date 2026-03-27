@@ -33,6 +33,7 @@ jobs:
         run: |
           for file in $FILELIST; do
             # set title to file name
-            TITLE="${file}"
+            NAME=${file}
+            TITLE=$NAME
             gh issue create --title "$TITLE" --body-file "/repos/$REPO/contents/.github/ISSUE_TEMPLATE/codex/${file}"
           done
