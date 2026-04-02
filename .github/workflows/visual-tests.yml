@@ -1,0 +1,161 @@
+name: Visual Tests
+
+permissions:
+    contents: read
+    id-token: write
+
+# Once proven stable, this workflow can be integrated into the integration workflow
+# by adding "Visual" to the "name" matrix element.
+on:
+    workflow_dispatch:
+        inputs:
+            update-snapshots:
+                description: "Update snapshots?"
+                type: boolean
+                default: false
+            currents:
+                description: "Report to currents?"
+                type: boolean
+                default: false
+            filter:
+                description: "Use this field to provide a filter that will be passed to playwrights `--grep` input."
+                type: string
+                default: ""
+
+    workflow_call:
+        inputs:
+            update-snapshots:
+                description: "Update snapshots?"
+                type: boolean
+                default: false
+            currents:
+                description: "Report to currents?"
+                type: boolean
+                default: false
+            filter:
+                description: "Use this field to provide a filter that will be passed to playwrights `--grep` input."
+                type: string
+                default: ""
+
+jobs:
+    visual-tests:
+        runs-on: ubuntu-latest
+        container:
+            image: mcr.microsoft.com/playwright:v1.58.1-noble
+            options: --init --ipc=host
+        services:
+            redis:
+                image: redis:alpine
+                ports:
+                    - 6379:6379
+            mailpit:
+                image: axllent/mailpit
+                ports:
+                    - 1025:1025
+                    - 8025:8025
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - uses: shopware/octo-sts-action@main
+              id: create-pr-token
+              with:
+                  scope: shopware
+                  identity: CreatePR
+              continue-on-error: true
+
+            - name: Define environment
+              shell: bash
+              run: |
+                  echo "REDIS_URL=redis://redis:6379" >> "$GITHUB_ENV"
+                  echo "MAILER_DSN=smtp://mailpit:1025" >> "$GITHUB_ENV"
+                  echo "MAILPIT_BASE_URL=http://mailpit:8025" >> "$GITHUB_ENV"
+                  echo "SHOPWARE_HTTP_CACHE_ENABLED=0" >> "$GITHUB_ENV"
+                  echo "SHOPWARE_DISABLE_UPDATE_CHECK=true" >> "$GITHUB_ENV"
+                  echo "BLUE_GREEN_DEPLOYMENT=1" >> "$GITHUB_ENV"
+                  echo "ENABLE_SERVICES=0" >> "$GITHUB_ENV"
+
+            - name: Setup Shopware
+              uses: shopware/setup-shopware@main
+              with:
+                  mysql-version: "builtin"
+                  shopware-version: v6.7.8.2
+                  shopware-repository: shopware/shopware
+                  install: true
+                  install-admin: true
+                  install-storefront: true
+                  env: prod
+                  php-version: "8.4"
+
+            - name: Cache npm packages
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      tests/acceptance/node_modules
+                      ~/.npm
+                  key: ${{ runner.os }}-tests/acceptance-${{ hashFiles('tests/acceptance/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-tests/acceptance
+
+            - name: Install dependencies
+              shell: bash
+              working-directory: tests/acceptance
+              run: npm ci
+
+            - name: Validate runtime
+              shell: bash
+              working-directory: tests/acceptance
+              run: |
+                  echo "Playwright image: mcr.microsoft.com/playwright:v1.58.1-noble"
+                  node --version
+                  npx playwright --version
+
+            - name: Run visual tests
+              id: visual-tests
+              shell: bash
+              working-directory: tests/acceptance
+              env:
+                  ATS_CMD: ${{ inputs.currents && 'pwc' || 'playwright' }}
+              run: >-
+                  npx $ATS_CMD test
+                  --project=Visual
+                  --workers=1
+                  --shard=1/1
+                  ${{ inputs.update-snapshots && '--update-snapshots' || '' }}
+                  ${{ inputs.filter && format('--grep="{0}"', inputs.filter) || '' }}
+              continue-on-error: true
+
+            - name: Upload test results
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: ats-Visual-1-php8.4
+                  path: tests/acceptance/test-results/
+                  retention-days: 3
+              continue-on-error: true
+
+            - name: Check for snapshot changes
+              id: diff
+              if: ${{ always() }}
+              shell: bash
+              run: |
+                  git diff --exit-code tests/acceptance/tests/ || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+            - name: Create Pull Request
+              if: ${{ always() && steps.diff.outputs.changed == 'true' && steps.create-pr-token.outputs.token != '' && inputs.update-snapshots }}
+              uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
+              with:
+                  token: ${{ steps.create-pr-token.outputs.token }}
+                  add-paths: |
+                      .gitignore
+                      tests/acceptance/tests/**/*-snapshots/*.png
+                  branch: update-ats-snapshots
+                  branch-suffix: short-commit-hash
+                  labels: |
+                      domain/quality-ops
+                  commit-message: "chore(ci): update acceptance test snapshots"
+                  title: "chore(ci): update acceptance test snapshots"
+                  body: "🤖 This PR updates acceptance test snapshots."
+              continue-on-error: true
