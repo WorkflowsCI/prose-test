@@ -59,13 +59,6 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - uses: shopware/octo-sts-action@main
-              id: create-pr-token
-              with:
-                  scope: shopware
-                  identity: CreatePR
-              continue-on-error: true
-
             - name: Define environment
               shell: bash
               run: |
@@ -136,26 +129,3 @@ jobs:
                   retention-days: 3
               continue-on-error: true
 
-            - name: Check for snapshot changes
-              id: diff
-              if: ${{ always() }}
-              shell: bash
-              run: |
-                  git diff --exit-code tests/acceptance/tests/ || echo "changed=true" >> "$GITHUB_OUTPUT"
-
-            - name: Create Pull Request
-              if: ${{ always() && steps.diff.outputs.changed == 'true' && steps.create-pr-token.outputs.token != '' && inputs.update-snapshots }}
-              uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
-              with:
-                  token: ${{ steps.create-pr-token.outputs.token }}
-                  add-paths: |
-                      .gitignore
-                      tests/acceptance/tests/**/*-snapshots/*.png
-                  branch: update-ats-snapshots
-                  branch-suffix: short-commit-hash
-                  labels: |
-                      domain/quality-ops
-                  commit-message: "chore(ci): update acceptance test snapshots"
-                  title: "chore(ci): update acceptance test snapshots"
-                  body: "🤖 This PR updates acceptance test snapshots."
-              continue-on-error: true
