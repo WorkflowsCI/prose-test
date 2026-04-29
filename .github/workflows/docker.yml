@@ -1,0 +1,53 @@
+name: Run playwright in Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  visual-admin:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Clone Shopware repo
+        uses: actions/checkout@master
+        with:
+          repository: shopware/shopware
+
+      - name: Install Playwright dependencies
+        working-directory: tests/acceptance
+        run: npm ci
+
+      - name: Start Shopware containers
+        run: docker compose up -d
+
+      - name: Install Shopware
+        run: docker compose exec -T web composer setup
+
+      - name: Wait for Shopware
+        run: |
+          timeout 300 bash -c 'until curl -sf http://localhost:8000/admin > /dev/null; do sleep 2; done'
+
+
+      - name: Run Admin visual tests in Playwright container
+        working-directory: tests/acceptance
+        run: |
+          docker run -it \
+            --rm \
+            --ipc=host \
+            --init \
+            -e APP_URL=http://localhost:8000 \
+            -e SHOPWARE_ADMIN_USERNAME=admin \
+            -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -v "$GITHUB_WORKSPACE:/app" \
+            mcr.microsoft.com/playwright:v1.58.1-noble \
+            npx playwright test --project=Visual
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: |
+            tests/acceptance/test-results/
+            tests/acceptance/playwright-report/
+          retention-days: 3
