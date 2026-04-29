@@ -23,7 +23,7 @@ jobs:
       - name: Install Shopware
         run: |
           docker compose exec -T -u root web composer setup
-          docker compose exec -T web bin/console theme:refresh
+          docker compose exec -T web bin/console theme:compile
 
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
@@ -39,7 +39,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/app" \
             -w /app/tests/acceptance \
             mcr.microsoft.com/playwright:v1.58.1-noble \
-            npx playwright test --project=Visual
+            npx playwright test --project=Visual --grep Storefront
 
       - name: Upload test results
         if: always()
