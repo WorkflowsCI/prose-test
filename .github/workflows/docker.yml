@@ -27,6 +27,8 @@ jobs:
         run: |
           timeout 300 bash -c 'until curl -sf http://localhost:8000/admin > /dev/null; do sleep 2; done'
 
+      - name: Start Webserver
+        run: symfony server:start -d
 
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
