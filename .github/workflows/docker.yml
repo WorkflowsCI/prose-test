@@ -27,16 +27,14 @@ jobs:
         run: |
           timeout 300 bash -c 'until curl -sf http://localhost:8000/admin > /dev/null; do sleep 2; done'
 
-      - name: Start Webserver
-        run: symfony server:start -d
-
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
           docker run --rm \
             --ipc=host \
             --init \
-            -e APP_URL=http://localhost:8000 \
+            --add-host=host.docker.internal:host-gateway \
+            -e APP_URL=http://host.docker.internal:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
             -v "$GITHUB_WORKSPACE:/app" \
