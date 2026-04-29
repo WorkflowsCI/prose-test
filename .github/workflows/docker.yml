@@ -21,7 +21,7 @@ jobs:
         run: docker compose up -d
 
       - name: Install Shopware
-        run: docker compose exec web composer setup
+        run: docker compose exec -T -u pwuser web composer setup
 
       - name: Wait for Shopware
         run: |
