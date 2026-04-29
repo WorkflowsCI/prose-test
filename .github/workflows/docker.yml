@@ -14,16 +14,14 @@ jobs:
           repository: shopware/shopware
 
       - name: Install Playwright dependencies
-        working-directory: /shopware/tests/acceptance
+        working-directory: tests/acceptance
         run: npm ci
 
       - name: Start Shopware containers
-        working-directory: /shopware
         run: docker compose up -d
 
       - name: Install Shopware
-        working-directory: /shopware
-        run: docker compose exec -T web composer setup
+        run: docker compose exec -T -u root web composer setup
 
       - name: Wait for Shopware
         run: |
