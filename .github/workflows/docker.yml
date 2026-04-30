@@ -24,7 +24,7 @@ jobs:
         run: |
           docker compose exec -T -u root web composer setup
           docker compose exec -T -u root web composer run npm:storefront run production
-          (cd src/Storefront/Resources/app/storefront && node copy-to-vendor.js)
+          # (cd src/Storefront/Resources/app/storefront && node copy-to-vendor.js)
 
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
