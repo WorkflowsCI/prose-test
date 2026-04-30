@@ -24,7 +24,7 @@ jobs:
         run: |
           docker compose exec -u root web composer setup
 
-      - name: Run Admin visual tests in Playwright container
+      - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
           docker run --rm \
