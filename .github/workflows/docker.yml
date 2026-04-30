@@ -17,9 +17,6 @@ jobs:
         working-directory: tests/acceptance
         run: npm ci
 
-      - name: Set up Docker Compose
-        uses: docker/setup-compose-action@v2
-
       - name: Start Shopware containers
         run: docker compose up -d
 
