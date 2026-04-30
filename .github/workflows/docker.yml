@@ -23,7 +23,6 @@ jobs:
       - name: Install Shopware
         run: |
           docker compose exec -T -u root web composer setup
-          docker compose exec -T -u root web bin/console theme:compile
 
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
@@ -31,9 +30,9 @@ jobs:
           docker run --rm \
             --ipc=host \
             --init \
-            --add-host=host.docker.internal:host-gateway \
+            --network=host \
             -e APP_ENV=prod \
-            -e APP_URL=http://host.docker.internal:8000 \
+            -e APP_URL=http://localhost:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
             -v "$GITHUB_WORKSPACE:/app" \
