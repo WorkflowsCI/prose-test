@@ -30,9 +30,8 @@ jobs:
           docker run --rm \
             --ipc=host \
             --init \
-            --network=host \
-            -e APP_ENV=prod \
-            -e APP_URL=http://localhost:8000 \
+            --add-host=host.docker.internal:host-gateway \
+            -e APP_URL=http://host.docker.internal:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
             -v "$GITHUB_WORKSPACE:/app" \
