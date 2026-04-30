@@ -23,6 +23,7 @@ jobs:
       - name: Install Shopware
         run: |
           docker compose exec -u root web composer setup
+          docker compose exec -u root web bin/console theme:compile
 
       - name: Run Admin visual tests in Playwright container
         working-directory: tests/acceptance
