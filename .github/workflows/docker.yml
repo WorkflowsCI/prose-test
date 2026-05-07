@@ -26,6 +26,13 @@ jobs:
         run: |
           docker compose exec -u root web composer setup
 
+      - name: Debug Shopware HTTP state
+        run: |
+          curl -I http://localhost:8000 || true
+          curl -sS http://localhost:8000 | head -n 40 || true
+          docker compose ps
+          docker compose logs web --tail=200
+
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
