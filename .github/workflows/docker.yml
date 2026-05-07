@@ -18,6 +18,8 @@ jobs:
         run: npm ci
 
       - name: Start Shopware containers
+        env:
+          APP_ENV: prod
         run: docker compose up -d
 
       - name: Install Shopware
