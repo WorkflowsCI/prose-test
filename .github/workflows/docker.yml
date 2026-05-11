@@ -32,7 +32,7 @@ jobs:
             install-storefront: true
 
       - name: Stop mysql
-        run: systemctl stop mysql
+        run: sudo systemctl stop mysql
       
 
       - name: Install Playwright dependencies
