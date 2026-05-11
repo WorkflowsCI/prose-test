@@ -19,20 +19,12 @@ jobs:
             echo "SHOPWARE_DISABLE_UPDATE_CHECK=true" >> $GITHUB_ENV
             echo "BLUE_GREEN_DEPLOYMENT=1" >> $GITHUB_ENV
             echo "ENABLE_SERVICES=0" >> $GITHUB_ENV
+            echo "APP_ENV=prod" >> $GITHUB_ENV
 
-      - name: Setup Shopware
-        uses: shopware/setup-shopware@main
+      - name: Clone Shopware repo
+        uses: actions/checkout@v6
         with:
-            env: prod
-            mysql-version: "builtin"
-            shopware-version: v6.7.10.0
-            shopware-repository: shopware/shopware
-            install: true
-            install-admin: true
-            install-storefront: true
-
-      - name: Stop mysql
-        run: sudo systemctl stop mysql
+          repository: shopware/shopware
       
 
       - name: Install Playwright dependencies
@@ -41,7 +33,10 @@ jobs:
 
 
       - name: Start Shopware containers
-        run: docker compose up -d web mailer
+        run: docker compose up -d
+
+      - name: Install Shopware
+        run: docker compose exec -u root web composer setup
 
       - name: Debug Shopware HTTP state
         run: |
