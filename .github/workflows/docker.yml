@@ -8,23 +8,35 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Clone Shopware repo
-        uses: actions/checkout@v6
+      - name: Define environment
+        shell: bash
+        run: |
+            echo "FEATURE_ALL=${{ inputs.major && 'major' }}" >> $GITHUB_ENV
+            echo "REDIS_URL=redis://localhost:6379" >> $GITHUB_ENV
+            echo "MAILER_DSN=smtp://localhost:1025" >> $GITHUB_ENV
+            echo "MAILPIT_BASE_URL=http://localhost:8025" >> $GITHUB_ENV
+            echo "SHOPWARE_HTTP_CACHE_ENABLED=0" >> $GITHUB_ENV
+            echo "SHOPWARE_DISABLE_UPDATE_CHECK=true" >> $GITHUB_ENV
+            echo "BLUE_GREEN_DEPLOYMENT=1" >> $GITHUB_ENV
+            echo "ENABLE_SERVICES=0" >> $GITHUB_ENV
+
+      - name: Setup Shopware
+        uses: shopware/setup-shopware@main
         with:
-          repository: shopware/shopware
+            mysql-version: "builtin"
+            shopware-version: ${{ github.ref }}
+            shopware-repository: ${{ github.repository }}
+            install: true
+            install-admin: true
+            install-storefront: true
+            env: prod
 
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
         run: npm ci
 
       - name: Start Shopware containers
-        env:
-          APP_ENV: prod
         run: docker compose up -d
-
-      - name: Install Shopware
-        run: |
-          docker compose exec -u root web composer setup
 
       - name: Debug Shopware HTTP state
         run: |
