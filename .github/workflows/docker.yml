@@ -23,13 +23,13 @@ jobs:
       - name: Setup Shopware
         uses: shopware/setup-shopware@main
         with:
+            env: prod
             mysql-version: "builtin"
-            shopware-version: ${{ github.ref }}
-            shopware-repository: ${{ github.repository }}
+            shopware-version: v6.7.10.0
+            shopware-repository: shopware/shopware
             install: true
             install-admin: true
             install-storefront: true
-            env: prod
 
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
