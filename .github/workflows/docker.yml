@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Start Shopware containers
-        run: docker compose up -d
+        run: docker compose up -d web mailer
 
       - name: Debug Shopware HTTP state
         run: |
