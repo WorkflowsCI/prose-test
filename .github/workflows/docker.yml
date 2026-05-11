@@ -24,7 +24,7 @@ jobs:
         uses: shopware/setup-shopware@main
         with:
             env: prod
-            mysql-version: "builtin"
+            mysql-version: "skip"
             shopware-version: v6.7.10.0
             shopware-repository: shopware/shopware
             install: true
