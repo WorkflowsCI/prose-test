@@ -24,16 +24,21 @@ jobs:
         uses: shopware/setup-shopware@main
         with:
             env: prod
-            mysql-version: "mysql:8.4"
+            mysql-version: "builtin"
             shopware-version: v6.7.10.0
             shopware-repository: shopware/shopware
             install: true
             install-admin: true
             install-storefront: true
 
+      - name: Stop mysql
+        run: systemctl stop mysql
+      
+
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
         run: npm ci
+
 
       - name: Start Shopware containers
         run: docker compose up -d web mailer
