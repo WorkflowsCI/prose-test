@@ -19,7 +19,7 @@ jobs:
 
       - name: Start Shopware containers
         env:
-          APP_ENV: prod
+          APP_ENV: APP_ENV-prod
         run: docker compose up -d
 
       - name: Install Shopware
@@ -32,10 +32,6 @@ jobs:
           curl -sS http://localhost:8000 | head -n 40 || true
           docker compose ps
           docker compose logs web --tail=200
-
-      - name: Wait for Shopware
-        run: |
-          timeout 300 bash -c 'until curl -sf http://localhost:8000 > /dev/null; do sleep 2; done'
 
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
