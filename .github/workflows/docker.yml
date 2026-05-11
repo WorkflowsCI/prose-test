@@ -24,7 +24,7 @@ jobs:
         uses: shopware/setup-shopware@main
         with:
             env: prod
-            mysql-version: "8.4"
+            mysql-version: "mysql:8.4"
             shopware-version: v6.7.10.0
             shopware-repository: shopware/shopware
             install: true
