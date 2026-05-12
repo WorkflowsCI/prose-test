@@ -34,27 +34,19 @@ jobs:
       - name: Stop mysql and symfony server
         run: |
           sudo systemctl stop mysql
-          symfony server:stop
-      
+          symfony server:stop   
 
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
         run: npm ci
 
-
-      - name: Start Shopware containers
-        run: docker compose up -d
-
-      - name: Debug Shopware HTTP state
-        run: |
-          curl -I http://localhost:8000 || true
-          curl -sS http://localhost:8000 | head -n 40 || true
-          docker compose ps
-          docker compose logs web --tail=200
+      #- name: Start Shopware containers
+      #  run: docker compose up -d
 
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
+          docker compose up -d
           docker run --rm \
             --ipc=host \
             --init \
