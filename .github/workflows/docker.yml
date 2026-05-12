@@ -19,23 +19,31 @@ jobs:
             echo "SHOPWARE_DISABLE_UPDATE_CHECK=true" >> $GITHUB_ENV
             echo "BLUE_GREEN_DEPLOYMENT=1" >> $GITHUB_ENV
             echo "ENABLE_SERVICES=0" >> $GITHUB_ENV
-            echo "APP_ENV=prod" >> $GITHUB_ENV
 
-      - name: Clone Shopware repo
-        uses: actions/checkout@v6
+      - name: Setup Shopware
+        uses: shopware/setup-shopware@main
         with:
-          repository: shopware/shopware
+            env: prod
+            mysql-version: "builtin"
+            shopware-version: v6.7.10.0
+            shopware-repository: shopware/shopware
+            install: true
+            install-admin: true
+            install-storefront: true
+
+      - name: Stop mysql and other stuff
+        run: |
+          sudo systemctl stop mysql
+          docker compose down
       
 
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
         run: npm ci
 
+
       - name: Start Shopware containers
         run: docker compose up -d
-
-      - name: Install Shopware
-        run: docker compose exec -u 1000:1000 web composer setup
 
       - name: Debug Shopware HTTP state
         run: |
@@ -54,7 +62,6 @@ jobs:
             -e APP_URL=http://host.docker.internal:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
-            -u 1000:1000 \
             -v "$GITHUB_WORKSPACE:/app" \
             -w /app/tests/acceptance \
             mcr.microsoft.com/playwright:v1.58.1-noble \
