@@ -31,10 +31,10 @@ jobs:
             install-admin: true
             install-storefront: true
 
-      - name: Stop mysql and other stuff
+      - name: Stop mysql and symfony server
         run: |
           sudo systemctl stop mysql
-          docker compose down
+          symfony server:stop
       
 
       - name: Install Playwright dependencies
