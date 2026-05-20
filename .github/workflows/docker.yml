@@ -46,7 +46,7 @@ jobs:
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
-          docker compose run web -d
+          docker compose run prose-test-web-1 -d
           docker run --rm \
             --ipc=host \
             --init \
