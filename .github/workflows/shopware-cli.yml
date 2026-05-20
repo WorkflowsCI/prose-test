@@ -1,0 +1,15 @@
+name: Run playwright via shopware-cli
+
+on:
+  workflow_dispatch:
+
+jobs:
+  visual-admin:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Install shopware-cli
+        uses: shopware/shopware-cli-action@v3
+
+      - name: Install shopware
+        run: shopware-cli project ci
