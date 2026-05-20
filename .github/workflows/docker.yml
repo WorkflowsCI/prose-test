@@ -40,13 +40,15 @@ jobs:
         working-directory: tests/acceptance
         run: npm ci
 
-      - name: Start Shopware containers
-        run: docker compose up -d
+      #- name: Start Shopware containers
+      #  run: docker compose up -d
 
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
-          docker compose run -d web
+          docker compose up -d
+          docker compose ps
+          # docker compose run -d web #no such service called web
           docker run --rm \
             --ipc=host \
             --init \
