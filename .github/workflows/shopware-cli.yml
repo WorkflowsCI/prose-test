@@ -12,4 +12,6 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Install shopware
-        run: shopware-cli project ci shopware-cli
+        run: |
+          shopware-cli project ci shopware-cli
+          ls shopware-cli
