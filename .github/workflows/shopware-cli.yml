@@ -30,18 +30,17 @@ jobs:
           cp shopware-platform/compose.yaml swcli/compose.yaml
           cp -R shopware-platform/tests swcli/tests
 
+      - name: Build project for CI
+        run: shopware-cli project ci swcli
+
       - name: Install Playwright dependencies
         working-directory: swcli/tests/acceptance
         run: npm ci
-
-      #- name: Build project for CI
-      #  run: shopware-cli project ci swcli
 
       - name: Start Docker services
         working-directory: swcli
         run: |
           docker compose up -d
-          docker compose exec web composer setup
 
       - name: Run visual tests in Playwright container
         working-directory: swcli/tests/acceptance
