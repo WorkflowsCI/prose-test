@@ -34,7 +34,7 @@ jobs:
           cp -R shopware-platform/tests swcli/tests
 
       - name: Install Playwright dependencies
-        working-directory: tests/acceptance
+        working-directory: swcli/tests/acceptance
         run: npm ci
 
       - name: Start Docker services
