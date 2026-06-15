@@ -34,4 +34,5 @@ jobs:
           cp -R shopware-platform/tests swcli/tests
 
       - name: Start Docker services
+        working-directory: swcli
         run: docker compose up -d
