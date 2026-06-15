@@ -28,10 +28,14 @@ jobs:
       - name: Build project for CI
         run: shopware-cli project ci swcli
 
-      - name: Copy compose files and tests directory into swcli
+      - name: Copy compose file and tests directory into swcli
         run: |
           cp shopware-platform/compose.yaml swcli/compose.yaml
           cp -R shopware-platform/tests swcli/tests
+
+      - name: Install Playwright dependencies
+        working-directory: tests/acceptance
+        run: npm ci
 
       - name: Start Docker services
         working-directory: swcli
