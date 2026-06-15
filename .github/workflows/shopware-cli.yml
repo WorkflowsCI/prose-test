@@ -29,7 +29,7 @@ jobs:
         run: |
           cp shopware-platform/compose.yaml swcli/compose.yaml
           cp -R shopware-platform/tests swcli
-          ls swcli
+          ls swcli/tests
 
       - name: Build project for CI
         run: shopware-cli project ci swcli
