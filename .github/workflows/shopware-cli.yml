@@ -49,10 +49,11 @@ jobs:
           docker run --rm \
             --ipc=host \
             --init \
-            -e APP_URL=http://localhost:8000 \
+            --add-host=host.docker.internal:host-gateway \
+            -e APP_URL=http://host.docker.internal:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
-            -v "$GITHUB_WORKSPACE:/app" \
+            -v "$GITHUB_WORKSPACE/swcli:/app" \
             -w /app/tests/acceptance \
             mcr.microsoft.com/playwright:v1.58.1-noble \
             npx playwright test --project=Visual
