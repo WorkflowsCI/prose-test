@@ -13,4 +13,4 @@ jobs:
 
       - name: Install shopware
         run: |
-          shopware-cli --no-interaction project ci
+          shopware-cli project ci --no-interaction 
