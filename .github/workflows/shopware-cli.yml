@@ -12,7 +12,7 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Create Shopware project
-        run: shopware-cli project create swcli latest --no-interaction
+        run: shopware-cli project create swcli latest --no-interaction --no-audit
 
       - name: Build project for CI
         run: shopware-cli project ci swcli
