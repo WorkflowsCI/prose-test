@@ -28,7 +28,7 @@ jobs:
       - name: Copy compose file and tests directory into swcli
         run: |
           cp shopware-platform/compose.yaml swcli/compose.yaml
-          cp -R shopware-platform/tests swcli/tests
+          cp -R shopware-platform/tests swcli
 
       - name: Build project for CI
         run: shopware-cli project ci swcli
@@ -53,5 +53,6 @@ jobs:
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
             -v "$GITHUB_WORKSPACE:/app" \
             -w /app/tests/acceptance \
-            mcr.microsoft.com/playwright:v1.58.1-noble \
             ls
+            # mcr.microsoft.com/playwright:v1.58.1-noble \
+
