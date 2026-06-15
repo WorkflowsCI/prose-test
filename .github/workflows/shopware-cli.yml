@@ -12,12 +12,24 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
+
+      - name: Clone shopware/shopware
+        uses: actions/checkout@v4
+        with:
+          repository: shopware/shopware
+          path: shopware-platform
           
       - name: Install shopware-cli
         uses: shopware/shopware-cli-action@v3
 
       - name: Create Shopware project
         run: shopware-cli project create swcli --no-interaction 
+
+      - name: Copy compose files and tests directory into swcli
+        run: |
+          cp shopware-platform/compose.yaml swcli/compose.yaml
+          cp shopware-platform/compose.override.yaml swcli/compose.override.yaml
+          cp -R shopware-platform/tests swcli/tests
 
       - name: Build project for CI
         run: shopware-cli project ci swcli
