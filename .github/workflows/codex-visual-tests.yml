@@ -1,0 +1,133 @@
+name: Run playwright via shopware-cli
+
+on:
+  workflow_dispatch:
+
+jobs:
+  visual-admin:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: redis
+          coverage: none
+
+      - name: Clone shopware/shopware
+        uses: actions/checkout@v4
+        with:
+          repository: shopware/shopware
+          path: shopware-platform
+
+      - name: Install shopware-cli
+        uses: shopware/shopware-cli-action@v3
+
+      - name: Create Shopware project
+        run: shopware-cli project create swcli --no-interaction
+
+      - name: Copy acceptance tests into swcli
+        run: |
+          mkdir -p swcli/tests
+          cp -R shopware-platform/tests/acceptance swcli/tests/acceptance
+
+      - name: Build project for CI
+        run: shopware-cli project ci swcli
+
+      - name: Install Playwright dependencies
+        working-directory: swcli/tests/acceptance
+        run: npm ci
+
+      - name: Create Docker compose for swcli
+        working-directory: swcli
+        run: |
+          cat > compose.yaml <<'EOF'
+          services:
+            web:
+              image: ghcr.io/shopware/docker-dev:php8.4-node24-caddy
+              ports:
+                - "8000:8000"
+              environment:
+                APP_ENV: prod
+                APP_URL: http://localhost:8000
+                APP_SECRET: 0123456789abcdef0123456789abcdef
+                DATABASE_URL: mysql://root:root@database:3306/shopware
+                MAILER_DSN: smtp://mailer:1025
+                REDIS_URL: redis://valkey:6379
+                SHOPWARE_HTTP_CACHE_ENABLED: 0
+                SHOPWARE_DISABLE_UPDATE_CHECK: "true"
+                BLUE_GREEN_DEPLOYMENT: 1
+              volumes:
+                - .:/var/www/html
+              depends_on:
+                database:
+                  condition: service_healthy
+
+            database:
+              image: mariadb:11
+              environment:
+                MARIADB_ROOT_PASSWORD: root
+                MARIADB_DATABASE: shopware
+              command:
+                - --default-time-zone=+00:00
+                - --log_bin_trust_function_creators=1
+              healthcheck:
+                test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-proot"]
+                interval: 5s
+                timeout: 3s
+                retries: 20
+
+            valkey:
+              image: valkey/valkey:alpine
+
+            mailer:
+              image: axllent/mailpit
+              ports:
+                - "8025:8025"
+          EOF
+
+      - name: Start Docker services
+        working-directory: swcli
+        run: docker compose up -d
+
+      - name: Wait for database
+        working-directory: swcli
+        run: |
+          timeout 120 bash -c 'until docker compose exec -T database mariadb-admin ping -h localhost -proot --silent; do sleep 2; done'
+
+      - name: Install Shopware
+        working-directory: swcli
+        run: |
+          docker compose exec -T web php bin/console system:install --basic-setup --create-database --force
+
+      - name: Warm up Shopware
+        working-directory: swcli
+        run: |
+          docker compose exec -T web php bin/console cache:clear
+          docker compose exec -T web php bin/console assets:install
+
+      - name: Wait for HTTP
+        run: |
+          timeout 180 bash -c 'until curl -sf http://localhost:8000 > /dev/null; do sleep 2; done'
+
+      - name: Run visual tests in Playwright container
+        run: |
+          docker run --rm \
+            --ipc=host \
+            --init \
+            --add-host=host.docker.internal:host-gateway \
+            -e APP_URL=http://host.docker.internal:8000 \
+            -e SHOPWARE_ADMIN_USERNAME=admin \
+            -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -v "$GITHUB_WORKSPACE/swcli:/app" \
+            -w /app/tests/acceptance \
+            mcr.microsoft.com/playwright:v1.58.1-noble \
+            npx playwright test --project=Visual
+
+      - name: Debug containers
+        if: always()
+        working-directory: swcli
+        run: |
+          docker compose ps -a
+          docker compose logs web --tail=200
