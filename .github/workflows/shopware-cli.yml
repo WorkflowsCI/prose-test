@@ -28,7 +28,6 @@ jobs:
       - name: Copy compose files and tests directory into swcli
         run: |
           cp shopware-platform/compose.yaml swcli/compose.yaml
-          cp shopware-platform/compose.override.yaml swcli/compose.override.yaml
           cp -R shopware-platform/tests swcli/tests
 
       - name: Build project for CI
