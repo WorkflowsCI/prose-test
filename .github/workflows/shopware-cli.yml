@@ -23,7 +23,7 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Create Shopware project
-        run: shopware-cli project ci swcli
+        run: shopware-cli project create swcli latest --no-interaction
 
       - name: Copy compose file and tests directory into swcli
         run: |
@@ -35,6 +35,8 @@ jobs:
         working-directory: swcli/tests/acceptance
         run: npm ci
 
+      - name: Optimize for CI
+        run: shopware-cli project ci swcli
 
       - name: Start Docker services
         working-directory: swcli
