@@ -104,10 +104,22 @@ jobs:
           APP_ENV: prod
         run: docker compose up -d
 
-      - name: Install Shopware inside container
+      - name: Install dependencies in container
         working-directory: swcli
-        run: docker compose exec -T web php bin/console system:install --basic-setup --create-database --force -vvv
-
+        run: docker compose exec -T web composer install --no-interaction
+      
+      - name: Install Shopware
+        working-directory: swcli
+        run: docker compose exec -T web php bin/console system:install --create-database --basic-setup --force
+      
+      - name: Install assets
+        working-directory: swcli
+        run: docker compose exec -T web php bin/console assets:install
+      
+      - name: Clear cache
+        working-directory: swcli
+        run: docker compose exec -T web php bin/console cache:clear
+              
       - name: Debug web container
         if: always()
         working-directory: swcli
