@@ -33,7 +33,9 @@ jobs:
           cp -R shopware-platform/tests/acceptance swcli/tests/acceptance
 
       - name: Build project for CI
-        run: shopware-cli project ci swcli
+        run: |
+          shopware-cli project ci swcli
+          ls swcli
 
       - name: Install Playwright dependencies
         working-directory: swcli/tests/acceptance
