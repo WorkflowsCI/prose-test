@@ -104,7 +104,7 @@ jobs:
 
       - name: Install Shopware inside container
         working-directory: swcli
-        run: docker compose exec -T web php bin/console system:install --basic-setup --create-database
+        run: docker compose exec -T web php bin/console system:install --basic-setup --create-database --force -vvv
 
       - name: Debug web container
         if: always()
