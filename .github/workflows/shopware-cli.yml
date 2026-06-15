@@ -11,6 +11,9 @@ jobs:
       - name: Install shopware-cli
         uses: shopware/shopware-cli-action@v3
 
-      - name: Install shopware
-        run: |
-          shopware-cli project ci latest --no-interaction 
+      - name: Create Shopware project
+        run: shopware-cli project create swcli latest --no-interaction --ci github
+
+      - name: Start Docker services
+        working-directory: swcli
+        run: docker compose up -d
