@@ -17,7 +17,7 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Create Shopware project
-        run: shopware-cli project ci latest
+        run: shopware-cli project ci --no-interaction
 
       - name: Start Docker services
         run: docker compose up -d
