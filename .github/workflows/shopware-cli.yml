@@ -30,7 +30,6 @@ jobs:
           cp shopware-platform/compose.yaml swcli/compose.yaml
           mkdir swcli/tests
           cp -R shopware-platform/tests/acceptance swcli/tests/acceptance
-          ls swcli/tests/acceptance
 
       - name: Build project for CI
         run: shopware-cli project ci swcli
