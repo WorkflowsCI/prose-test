@@ -32,7 +32,6 @@ jobs:
         run: |
           cp shopware-platform/compose.yaml swcli/compose.yaml
           cp -R shopware-platform/tests swcli/tests
-          ls swcli
 
       - name: Start Docker services
         run: docker compose up -d
