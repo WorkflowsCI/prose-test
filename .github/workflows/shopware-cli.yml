@@ -35,15 +35,12 @@ jobs:
         working-directory: swcli/tests/acceptance
         run: npm ci
 
-      - name: Build project for CI
-        run: shopware-cli project ci swcli
 
       - name: Start Docker services
         working-directory: swcli
-        env:
-          APP_ENV: prod
         run: |
           docker compose up -d
+          shopware-cli project ci swcli
 
       - name: Debug web container
         if: always()
