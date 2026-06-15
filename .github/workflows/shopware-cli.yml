@@ -31,9 +31,6 @@ jobs:
           mkdir swcli/tests
           cp -R shopware-platform/tests/acceptance swcli/tests/acceptance
 
-      - name: Build project for CI
-        run: shopware-cli project ci swcli
-
       - name: Install Playwright dependencies
         working-directory: swcli/tests/acceptance
         run: npm ci
@@ -42,6 +39,8 @@ jobs:
         working-directory: swcli
         run: |
           docker compose up -d
+          symfony console system:install --basic-setup
+          symfony server:start -d
 
       - name: Run visual tests in Playwright container
         working-directory: swcli/tests/acceptance
