@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          
       - name: Install shopware-cli
         uses: shopware/shopware-cli-action@v3
 
