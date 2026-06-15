@@ -35,12 +35,15 @@ jobs:
         working-directory: swcli/tests/acceptance
         run: npm ci
 
+      - name: Build project for CI
+        run: shopware-cli project ci swcli
+
       - name: Start Docker services
         working-directory: swcli
+        env:
+          APP_ENV: prod
         run: |
           docker compose up -d
-          docker compose exec web bin/console system:install --basic-setup
-          docker compose exec web bin/console server:start -d
 
       - name: Run visual tests in Playwright container
         working-directory: swcli/tests/acceptance
