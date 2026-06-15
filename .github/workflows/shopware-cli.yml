@@ -39,8 +39,8 @@ jobs:
         working-directory: swcli
         run: |
           docker compose up -d
-          symfony console system:install --basic-setup
-          symfony server:start -d
+          docker compose exec web symfony console system:install --basic-setup
+          docker compose exec web symfony server:start -d
 
       - name: Run visual tests in Playwright container
         working-directory: swcli/tests/acceptance
