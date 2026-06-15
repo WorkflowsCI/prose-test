@@ -45,6 +45,14 @@ jobs:
         run: |
           docker compose up -d
 
+      - name: Debug web container
+        if: always()
+        working-directory: swcli
+        run: |
+          docker compose ps
+          docker compose logs web --tail=200
+
+
       - name: Run visual tests in Playwright container
         working-directory: swcli/tests/acceptance
         run: |
