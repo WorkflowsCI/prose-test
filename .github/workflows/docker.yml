@@ -31,10 +31,10 @@ jobs:
             install-admin: true
             install-storefront: true
 
-      - name: Stop mysql and symfony server
-        run: |
-          sudo systemctl stop mysql
-          symfony server:stop   
+      # - name: Stop mysql and symfony server
+      #   run: |
+      #     sudo systemctl stop mysql
+      #     symfony server:stop   
 
       - name: Install Playwright dependencies
         working-directory: tests/acceptance
@@ -46,13 +46,14 @@ jobs:
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         run: |
-          docker compose up -d
-          docker compose ps
+          # docker compose up -d
+          # docker compose ps
           # docker compose run -d web #no such service called web
           docker run --rm \
             --ipc=host \
             --init \
-            --add-host=host.docker.internal:host-gateway \
+            # --add-host=host.docker.internal:host-gateway \
+            --network=host \
             -e APP_URL=http://host.docker.internal:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
