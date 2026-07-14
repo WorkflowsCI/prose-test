@@ -76,7 +76,7 @@ jobs:
             -e CURRENTS_BUILD_ID \
             -v "$GITHUB_WORKSPACE:/app" \
             -w /app/tests/acceptance \
-            mcr.microsoft.com/playwright:v1.60.0-noble \
+            mcr.microsoft.com/playwright:v1.61.0-noble \
             npx $ATS_CMD test --project=Visual --workers=1 "$UPDATE_SNAPSHOTS" "$FILTER"
       - name: Upload visual test results
         if: always()
