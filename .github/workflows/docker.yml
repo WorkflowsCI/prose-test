@@ -67,6 +67,7 @@ jobs:
             --ipc=host \
             --init \
             --network=host \
+            --user $(id -u):$(id -g) \
             -e APP_URL=http://localhost:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
