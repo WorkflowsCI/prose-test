@@ -52,6 +52,12 @@ jobs:
           npm config set fetch-retries 5
           npm config set fetch-retry-mintimeout 20000
           npm ci
+      - name: Detect Playwright version
+        id: playwright-version
+        working-directory: tests/acceptance
+        run: |
+          VERSION=$(npm --json list playwright-core | jq --raw-output '.version')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
         continue-on-error: true
