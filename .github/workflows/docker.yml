@@ -47,15 +47,12 @@ jobs:
             install-storefront: true
 
       - name: Install Playwright dependencies
+        id: install-playwright
         working-directory: tests/acceptance
         run: |
           npm config set fetch-retries 5
           npm config set fetch-retry-mintimeout 20000
           npm ci
-      - name: Detect Playwright version
-        id: playwright-version
-        working-directory: tests/acceptance
-        run: |
           VERSION=$(npm --json --depth=0 list playwright | jq --raw-output '.version')
           echo "version=$VERSION" >> "$GITHUB_ENV"
       - name: Run visual tests in Playwright container
