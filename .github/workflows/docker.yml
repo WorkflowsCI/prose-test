@@ -56,7 +56,7 @@ jobs:
         id: playwright-version
         working-directory: tests/acceptance
         run: |
-          VERSION=$(npm --json list playwright-core | jq --raw-output '.version')
+          VERSION=$(npm --json --depth=0 list playwright | jq --raw-output '.version')
           echo "version=$VERSION" >> "$GITHUB_ENV"
       - name: Run visual tests in Playwright container
         working-directory: tests/acceptance
