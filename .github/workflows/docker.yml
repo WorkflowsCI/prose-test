@@ -36,7 +36,7 @@ jobs:
             echo "BLUE_GREEN_DEPLOYMENT=1" >> $GITHUB_ENV
             echo "ENABLE_SERVICES=0" >> $GITHUB_ENV
       - name: Setup Shopware
-        uses: shopware/setup-shopware@main
+        uses: shopware/setup-shopware@e12701e21d8a6003103426969ba544cdc91bf41c
         with:
             env: prod
             mysql-version: "builtin"
