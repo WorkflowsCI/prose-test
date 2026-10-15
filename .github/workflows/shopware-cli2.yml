@@ -52,6 +52,8 @@ jobs:
             -v "$GITHUB_WORKSPACE:/ats" \
             -w /ats \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            npm config set fetch-retries=5 fetch-retry-mintimeout=20000 \
-            npm ci \
-            npx playwright test --project=Visual --workers=1
+            bash -c "
+                npm config set fetch-retries=5 fetch-retry-mintimeout=20000 
+                npm ci 
+                npx playwright test --project=Visual --workers=1
+              "
