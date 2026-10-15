@@ -28,13 +28,31 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd platform
-          cd tests/acceptance
+          cd platform/tests/acceptance
           npm config set fetch-retries=5 fetch-retry-mintimeout=20000
           npm ci
           
-      - name: Start Docker containers
+      - name: Start Docker containers (github runner resets to main workspace between steps)
         run: |
-          ls
           cd platform
           docker compose up -d
+
+      - name: Playwright Docker + visual tests
+        run: |
+          cd platform/tests/acceptance
+          PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
+          docker run --rm \
+            --ipc=host \
+            --init \
+            --network=host \
+            --user "$(id -u):$(id -g)" \
+            -e APP_URL=http://localhost:8000 \
+            -e SHOPWARE_ADMIN_USERNAME=admin \
+            -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -e CURRENTS_PROJECT_ID \
+            -e CURRENTS_RECORD_KEY \
+            -e CURRENTS_BUILD_ID \
+            -v "$GITHUB_WORKSPACE:/app" \
+            -w /app/tests/acceptance \
+            "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
+            npx "$ATS_CMD" test --project=Visual --workers=1
