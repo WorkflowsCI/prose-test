@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7.0.1
         with:
           repository: shopware/shopware
-          path: shopware-main
+          path: main
 
 
       - name: Install shopware-cli
@@ -27,6 +27,6 @@ jobs:
         run: |
           cd platform
           mkdir -p tests
-          cp -a shopware-main/tests/. platform/tests/
+          cp -a ../main/tests/. platform/tests/
           cd tests/acceptance
           ls
