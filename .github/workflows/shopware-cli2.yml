@@ -26,11 +26,11 @@ jobs:
       - name: Copy Shopware tests
         run: cp -r main/tests platform
 
-      #- name: Install dependencies
-      #  run: |
-      #    cd platform/tests/acceptance
-      #    npm config set fetch-retries=5 fetch-retry-mintimeout=20000
-      #    npm ci
+      - name: Install dependencies
+        run: |
+          cd platform/tests/acceptance
+          npm config set fetch-retries=5 fetch-retry-mintimeout=20000
+          npm ci
           
       - name: Start Docker containers (github runner resets to main workspace between steps)
         run: |
@@ -52,8 +52,4 @@ jobs:
             -v "$GITHUB_WORKSPACE:/ats" \
             -w /ats \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            bash -c "
-                npm config set fetch-retries=5 fetch-retry-mintimeout=20000 
-                npm ci 
-                npx playwright test --project=Visual --workers=1
-              "
+            npx playwright test --project=Visual --workers=1
