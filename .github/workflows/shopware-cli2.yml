@@ -26,13 +26,13 @@ jobs:
       - name: Copy Shopware tests
         run: cp -r main/tests platform
 
+      - name: Start Docker containers
+        run: |
+          cd platform
+          docker composer up -d
+
       - name: Install dependencies
         run: |
-          cd platform/tests/acceptance
+          cd tests/acceptance
           npm config set fetch-retries=5 fetch-retry-mintimeout=20000
           npm ci
-
-      - name: Start docker containers
-        run: |
-          cd ~/platform
-          ls
