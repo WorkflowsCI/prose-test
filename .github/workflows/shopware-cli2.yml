@@ -49,6 +49,6 @@ jobs:
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
             -v "$GITHUB_WORKSPACE:/ats" \
-            -w /ats/tests/acceptance \
+            -w /ats \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
             npx playwright test --project=Visual --workers=1
