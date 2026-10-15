@@ -48,5 +48,7 @@ jobs:
             -e APP_URL=http://localhost:8000 \
             -e SHOPWARE_ADMIN_USERNAME=admin \
             -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -w /ats 
+            -v .:/ats
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
             npx playwright test --project=Visual --workers=1
