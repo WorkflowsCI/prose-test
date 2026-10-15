@@ -1,4 +1,4 @@
-name: Docker: Shopware + Playwright
+name: Docker - Shopware + Playwright
 
 on:
   workflow_dispatch:
