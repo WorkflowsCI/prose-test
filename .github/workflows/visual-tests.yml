@@ -21,9 +21,7 @@ jobs:
         run: docker compose up -d
 
       - name: Install Shopware
-        env:
-          USER: "$(id -u):$(id -g)"
-        run: docker compose exec -T -u "$USER" web composer setup
+        run: docker compose exec -T -u "$(id -u):$(id -g)" web composer setup
 
       - name: Wait for Shopware
         run: |
