@@ -15,6 +15,7 @@ jobs:
         run: |
           shopware-cli project create shopware-docker --docker --no-interaction --ci github
           cd shopware-docker
+          ls
           PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
           docker composer up -d
           cd tests/acceptance
