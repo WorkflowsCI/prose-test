@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  visual-admin:
+  shopware-cli:
     runs-on: ubuntu-24.04
 
     steps:
@@ -13,3 +13,6 @@ jobs:
 
       - name: Install Shopware
         run: shopware-cli project create platform dev-trunk --ci github --docker
+
+      - name: Start Docker containers
+        run: docker compose up -d
