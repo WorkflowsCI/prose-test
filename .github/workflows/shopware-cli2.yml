@@ -32,9 +32,9 @@ jobs:
           cd tests/acceptance
           npm config set fetch-retries=5 fetch-retry-mintimeout=20000
           npm ci
-          cd -
           
       - name: Start Docker containers
         run: |
           ls
+          cd platform
           docker compose up -d
