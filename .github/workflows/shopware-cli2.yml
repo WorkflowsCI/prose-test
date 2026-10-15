@@ -1,0 +1,15 @@
+name: shopware-cli
+
+on:
+  workflow_dispatch:
+
+jobs:
+  visual-admin:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Install shopware-cli
+        uses: shopware/shopware-cli-action@v3
+
+      - name: Install Shopware
+        run: shopware-cli project create platform dev-trunk --ci github --docker
