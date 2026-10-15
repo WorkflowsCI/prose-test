@@ -13,7 +13,24 @@ jobs:
 
       - name: Install Shopware
         run: |
-          shopware-cli project create platform dev-trunk --ci github --docker
-          cd platform
-          docker compose up -d
-          symfony console system:install --basic-setup --create-database
+          shopware-cli project create shopware-docker --docker --no-interaction --ci github
+          cd shopware-docker
+          PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
+          docker composer up -d
+          cd tests/acceptance
+          npm ci
+          docker run --rm \
+            --ipc=host \
+            --init \
+            --network=host \
+            --user "$(id -u):$(id -g)" \
+            -e APP_URL=http://localhost:8000 \
+            -e SHOPWARE_ADMIN_USERNAME=admin \
+            -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -e CURRENTS_PROJECT_ID \
+            -e CURRENTS_RECORD_KEY \
+            -e CURRENTS_BUILD_ID \
+            -v "$GITHUB_WORKSPACE:/app" \
+            -w /app/tests/acceptance \
+            "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
+            npx playwright test --project=Visual
