@@ -24,7 +24,15 @@ jobs:
         run: shopware-cli project create platform --docker --no-interaction --ci github
 
       - name: Copy Shopware tests
+        run: cp -r main/tests platform
+
+      - name: Install dependencies
         run: |
-          cp -r main/tests platform
           cd platform/tests/acceptance
+          npm config set fetch-retries=5 fetch-retry-mintimeout=20000
+          npm ci
+
+      - name: Start docker containers
+        run: |
+          cd ~/platform
           ls
