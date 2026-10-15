@@ -25,7 +25,6 @@ jobs:
 
       - name: Copy Shopware tests
         run: |
+          cp -r main/tests platform
           cd platform
-          cp -r ../main/tests platform
-          cd tests/acceptance
           ls
