@@ -12,7 +12,7 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Install Shopware
-        run: shopware-cli project create platform dev-trunk --ci github --docker
-
-      - name: Start Docker containers
-        run: docker compose up -d
+        run: |
+          shopware-cli project create platform dev-trunk --ci github --docker
+          docker compose up -d
+          symfony console system:install --basic-setup
