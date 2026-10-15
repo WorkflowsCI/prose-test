@@ -40,7 +40,6 @@ jobs:
       - name: Playwright + visual tests
         run: |
           cd platform/tests/acceptance
-          ls
           PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
           docker run --rm \
             --ipc=host \
