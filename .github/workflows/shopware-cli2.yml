@@ -28,12 +28,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          ls
-          cd platform/tests/acceptance
+          cd platform
+          cd tests/acceptance
           npm config set fetch-retries=5 fetch-retry-mintimeout=20000
           npm ci
+          cd -
           
       - name: Start Docker containers
         run: |
-          cd ~/platform
+          ls
           docker compose up -d
