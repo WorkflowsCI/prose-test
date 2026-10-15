@@ -40,6 +40,7 @@ jobs:
       - name: Playwright + visual tests
         run: |
           cd platform/tests/acceptance
+          ls
           PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
           docker run --rm \
             --ipc=host \
@@ -52,7 +53,7 @@ jobs:
             -e CURRENTS_PROJECT_ID \
             -e CURRENTS_RECORD_KEY \
             -e CURRENTS_BUILD_ID \
-            -v "$GITHUB_WORKSPACE:/app" \
-            -w /app/tests/acceptance \
+            -v "$GITHUB_WORKSPACE:/ats" \
+            -w /ats \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
             npx playwright test --grep @Visual --workers=1
