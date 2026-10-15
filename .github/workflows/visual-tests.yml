@@ -1,131 +1,50 @@
-name: Visual Tests
+name: Run playwright in Docker
 
-permissions:
-    contents: read
-    id-token: write
-
-# Once proven stable, this workflow can be integrated into the integration workflow
-# by adding "Visual" to the "name" matrix element.
 on:
-    workflow_dispatch:
-        inputs:
-            update-snapshots:
-                description: "Update snapshots?"
-                type: boolean
-                default: false
-            currents:
-                description: "Report to currents?"
-                type: boolean
-                default: false
-            filter:
-                description: "Use this field to provide a filter that will be passed to playwrights `--grep` input."
-                type: string
-                default: ""
-
-    workflow_call:
-        inputs:
-            update-snapshots:
-                description: "Update snapshots?"
-                type: boolean
-                default: false
-            currents:
-                description: "Report to currents?"
-                type: boolean
-                default: false
-            filter:
-                description: "Use this field to provide a filter that will be passed to playwrights `--grep` input."
-                type: string
-                default: ""
+  workflow_dispatch:
 
 jobs:
-    visual-tests:
-        runs-on: ubuntu-latest
-        container:
-            image: mcr.microsoft.com/playwright:v1.58.1-noble
-            options: --init --ipc=host
-        services:
-            redis:
-                image: redis:alpine
-                ports:
-                    - 6379:6379
-            mailpit:
-                image: axllent/mailpit
-                ports:
-                    - 1025:1025
-                    - 8025:8025
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v6
-              with:
-                  fetch-depth: 0
+  visual-admin:
+    runs-on: ubuntu-24.04
 
-            - name: Define environment
-              shell: bash
-              run: |
-                  echo "REDIS_URL=redis://redis:6379" >> "$GITHUB_ENV"
-                  echo "MAILER_DSN=smtp://mailpit:1025" >> "$GITHUB_ENV"
-                  echo "MAILPIT_BASE_URL=http://mailpit:8025" >> "$GITHUB_ENV"
-                  echo "SHOPWARE_HTTP_CACHE_ENABLED=0" >> "$GITHUB_ENV"
-                  echo "SHOPWARE_DISABLE_UPDATE_CHECK=true" >> "$GITHUB_ENV"
-                  echo "BLUE_GREEN_DEPLOYMENT=1" >> "$GITHUB_ENV"
-                  echo "ENABLE_SERVICES=0" >> "$GITHUB_ENV"
+    steps:
+      - name: Clone Shopware repo
+        uses: actions/checkout@master
+        with:
+          repository: shopware/shopware
 
-            - name: Setup Shopware
-              uses: shopware/setup-shopware@main
-              with:
-                  mysql-version: "builtin"
-                  shopware-version: v6.7.8.2
-                  shopware-repository: shopware/shopware
-                  install: true
-                  install-admin: true
-                  install-storefront: true
-                  env: prod
-                  php-version: "8.4"
+      - name: Install Playwright dependencies
+        working-directory: tests/acceptance
+        run: npm ci
 
-            - name: Cache npm packages
-              uses: actions/cache@v4
-              with:
-                  path: |
-                      tests/acceptance/node_modules
-                      ~/.npm
-                  key: ${{ runner.os }}-tests/acceptance-${{ hashFiles('tests/acceptance/package-lock.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-tests/acceptance
+      - name: Start Shopware containers
+        run: docker compose up -d
 
-            - name: Install dependencies
-              shell: bash
-              working-directory: tests/acceptance
-              run: npm ci
+      - name: Install Shopware
+        run: docker compose exec -T -u root web composer setup
 
-            - name: Validate runtime
-              shell: bash
-              working-directory: tests/acceptance
-              run: |
-                  echo "Playwright image: mcr.microsoft.com/playwright:v1.58.1-noble"
-                  node --version
-                  npx playwright --version
-
-            - name: Run visual tests
-              id: visual-tests
-              shell: bash
-              working-directory: tests/acceptance
-              env:
-                  ATS_CMD: ${{ inputs.currents && 'pwc' || 'playwright' }}
-              run: >-
-                  npx $ATS_CMD test
-                  --project=Visual
-                  --workers=1
-                  --shard=1/1
-                  ${{ inputs.update-snapshots && '--update-snapshots' || '' }}
-                  ${{ inputs.filter && format('--grep="{0}"', inputs.filter) || '' }}
-              continue-on-error: true
-
-            - name: Upload test results
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: ats-Visual-1-php8.4
-                  path: tests/acceptance/test-results/
-                  retention-days: 3
-              continue-on-error: true
-
+      - name: Wait for Shopware
+        run: |
+          timeout 300 bash -c 'until curl -sf http://localhost:8000/admin > /dev/null; do sleep 2; done'
+      - name: Run Admin visual tests in Playwright container
+        working-directory: tests/acceptance
+        run: |
+          docker run --rm \
+            --ipc=host \
+            --init \
+            -e APP_URL=http://localhost:8000 \
+            -e SHOPWARE_ADMIN_USERNAME=admin \
+            -e SHOPWARE_ADMIN_PASSWORD=shopware \
+            -v "$GITHUB_WORKSPACE:/app" \
+            -w /app/tests/acceptance \
+            mcr.microsoft.com/playwright:v1.58.1-noble \
+            ls
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: |
+            tests/acceptance/test-results/
+            tests/acceptance/playwright-report/
+          retention-days: 3
