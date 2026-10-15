@@ -16,4 +16,4 @@ jobs:
           shopware-cli project create platform dev-trunk --ci github --docker
           cd platform
           docker compose up -d
-          symfony console system:install --basic-setup
+          docker compose exec -T -u $(id -u):$(id -g) web composer setup
