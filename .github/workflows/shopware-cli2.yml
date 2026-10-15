@@ -36,9 +36,6 @@ jobs:
         run: |
           cd platform
           docker compose up -d
-
-      - name: Playwright Docker + visual tests
-        run: |
           cd platform/tests/acceptance
           PLAYWRIGHT_VERSION=$(jq -r '.packages["node_modules/playwright-core"].version' package-lock.json)
           docker run --rm \
