@@ -51,4 +51,4 @@ jobs:
             -v "$GITHUB_WORKSPACE:/ats" \
             -w /ats/tests/acceptance \
             "mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble" \
-            ls
+            npx playwright test --project=Visual --workers=1
