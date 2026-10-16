@@ -21,7 +21,8 @@ jobs:
         uses: shopware/shopware-cli-action@v3
 
       - name: Create CI Docker project
-        run: shopware-cli project create platform --docker --no-interaction --ci github
+        run: |
+          shopware-cli project create --no-interaction --ci --docker platform
 
       - name: Copy Shopware tests
         run: cp -r main/tests platform
@@ -34,7 +35,9 @@ jobs:
           
       - name: Start Docker containers (github runner resets to main workspace between steps)
         working-directory: platform
-        run: docker compose up -d
+        run: |
+          docker compose up -d
+          make setup
 
       - name: Playwright + visual tests
         working-directory: platform/tests/acceptance
