@@ -1,0 +1,22 @@
+name: Plugin lifecycle
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  plugin-lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: SwagPublisher
+          shopwareVersion: trunk
+          install: true
+          env: prod
+
+      - uses: shopware/github-actions/plugin-lifecycle@main
+        with:
+          extensionName: SwagPublisher
